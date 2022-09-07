@@ -6,7 +6,7 @@ I created this dotfile repository for save all my shell config and use it after 
 - [Oh My Posh](https://ohmyposh.dev/)
 - [Vim](https://www.vim.org/)
 - [Neovim](https://neovim.io/)
-- Node Version Manager (NVM)
+- [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm)
 - [Clink (For customize CMD)](https://github.com/chrisant996/clink)
 
 ## Shell
