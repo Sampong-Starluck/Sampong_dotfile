@@ -15,8 +15,8 @@ I created this dotfile repository for save all my shell config and use it after 
 - Bash (Git Bash, Cywin)
 
 ## Terminal Emulator
-- Tabby Terminal
-- Windows Terminal
+- [Tabby Terminal](https://tabby.sh/)
+- [Windows Terminal](https://github.com/microsoft/terminal)
 
 ## Command Line base text editor
 - Vim
