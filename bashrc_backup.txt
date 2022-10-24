@@ -1,28 +1,65 @@
 # Node installation (via node version manager or NVM for Unix Like OS)
 
-## Lazy loading nvm
+## Lazy loading nvm (method 1)
 
-lazy_load_nvm(){
-  unset -f node
-  export NVM_DIR="~/.nvm"
-  [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"  # This loads nvm
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$HOME/.nvm"
+mapfile -t __NODE_GLOBALS < <(find "$NVM_DIR/versions/node/"*/bin/ -maxdepth 1 -mindepth 1 -type l -print0 | xargs --null -n1 basename $NVM_DIR | sort --unique)
+__NODE_GLOBALS+=(node)
+__NODE_GLOBALS+=(nvm)
+__NODE_GLOBALS+=(npm)
+__NODE_GLOBALS+=(npx)
+# __NODE_GLOBALS+=(yarn)
+# __NODE_GLOBALS+=(pnpm)
+
+# instead of using --no-use flag, load nvm lazily:
+_load_nvm() {
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 }
 
-node(){
-  lazy_load_nvm
-  node $@
-}
+for cmd in "${__NODE_GLOBALS[@]}"; do
+    eval "function ${cmd}(){ unset -f ${__NODE_GLOBALS[*]}; _load_nvm; unset -f _load_nvm; ${cmd} \"\$@\"; }"
+done
+unset cmd __NODE_GLOBALS
 
-## Add node to path and don't load nvm unless invoke nvm command
+## lazy loading nvm (method 2)
+
+# lazy_load_nvm(){
+#     unset -f node
+#     export NVM_DIR="$HOME/.nvm"
+#     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# }
+
+# node(){
+#     lazy_load_nvm
+#     node $@
+# }
+
+# nvm() {
+#   lazy_load_nvm 
+#   nvm $@
+# }
+ 
+# npm() {
+#   lazy_load_nvm
+#   npm $@
+# }
+
+# npx() {
+#   lazy_load_nvm
+#   npx $@
+# }
+
+## Add node to path and don't load nvm unless invoke nvm command (method 3)
 
 # Add default node to path
-# export PATH=~/.nvm/versions/node/*/bin:$PATH
+# export PATH="$HOME/.nvm/versions/node/*/bin":$PATH
 
 ## Load NVM
-# export NVM_DIR=~/.nvm
-# [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh" --no-use
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" --no-use
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  --no-use # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  --no-use # This loads nvm bash_completion
 
 ## Original method
 
@@ -32,7 +69,7 @@ node(){
 
 # Configuration
 # Theme
-eval "$(oh-my-posh init bash --config "C:\Users\Sampong Lim\AppData\Local\Programs\oh-my-posh\themes\kali.omp.json")"
+eval "$(oh-my-posh init bash --config "C:\Users\Sampong\AppData\Local\Programs\oh-my-posh\themes\space.omp.json")"
 # Tools
 export PYTHONIOENCODING=utf8
 eval $(thefuck --alias)
@@ -51,6 +88,3 @@ alias time_rc='time source ./.bashrc'
 
 # History_configuration
 # PROMPT_COMMAND='history -a'
-
-# Load Angular CLI autocompletion.
-source <(ng completion script)
