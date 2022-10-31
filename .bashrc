@@ -1,9 +1,10 @@
-# Node installation (via node version manager or NVM for Unix Like OS)
+#!/usr/bin/env bash
+## Node installation (via node version manager or NVM for Unix Like OS)
 
 ## Lazy loading nvm (method 1)
 
 export NVM_DIR="$HOME/.nvm"
-mapfile -t __NODE_GLOBALS < <(find "$NVM_DIR/versions/node/"*/bin/ -maxdepth 1 -mindepth 1 -type l -print0 | xargs --null -n1 basename $NVM_DIR | sort --unique)
+mapfile -t __NODE_GLOBALS < <(find "$NVM_DIR/versions/node/"*/bin/ -maxdepth 1 -mindepth 1 -type l -print0 | xargs --null -n1 basename "$NVM_DIR" | sort --unique)
 __NODE_GLOBALS+=(node)
 __NODE_GLOBALS+=(nvm)
 __NODE_GLOBALS+=(npm)
@@ -13,8 +14,8 @@ __NODE_GLOBALS+=(npx)
 
 # instead of using --no-use flag, load nvm lazily:
 _load_nvm() {
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 }
 
 for cmd in "${__NODE_GLOBALS[@]}"; do
@@ -37,10 +38,10 @@ unset cmd __NODE_GLOBALS
 # }
 
 # nvm() {
-#   lazy_load_nvm 
+#   lazy_load_nvm
 #   nvm $@
 # }
- 
+
 # npm() {
 #   lazy_load_nvm
 #   npm $@
@@ -69,10 +70,11 @@ unset cmd __NODE_GLOBALS
 
 # Configuration
 # Theme
-eval "$(oh-my-posh init bash --config "C:\Users\Sampong\AppData\Local\Programs\oh-my-posh\themes\space.omp.json")"
+export ENV_POSH_THEMES="$HOME\AppData\Local\Programs\oh-my-posh\themes"
+eval "$(oh-my-posh init bash --config "$ENV_POSH_THEMES\space.omp.json")"
 # Tools
 export PYTHONIOENCODING=utf8
-eval $(thefuck --alias)
+eval "$(thefuck --alias)"
 # eval $(thefuck --alias FUCK)
 
 # alias
