@@ -103,6 +103,9 @@ function Edit-Profile {
 Remove-Variable identity
 Remove-Variable principal
 
+<#
+        Test-CommandExists function is used for find and test the command line tool the installed in Windows  
+ #>
 Function Test-CommandExists {
     Param ($command)
     $oldPreference = $ErrorActionPreference
@@ -137,13 +140,22 @@ Set-Alias -Name vim -Value $EDITOR
 function ll { Get-ChildItem -Path $pwd -File }
 function g { Set-Location $HOME\Documents\Github }
 function gcom {
-    git add .
-    git commit -m "$args"
+        git add .
+        git commit -m "$args"
 }
-function lazyg {
-    git add .
-    git commit -m "$args"
-    git push
+function gamend {
+        git add .
+        git commit --amend --no-edit
+}
+function lazygcom {
+        git add .
+        git commit -m "$args"
+        git push
+}
+function lazygamend {
+        git add .
+        git commit --amend --no-edit
+        git push
 }
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
