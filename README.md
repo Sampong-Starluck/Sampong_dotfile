@@ -32,7 +32,7 @@ I used clink for modernize the cmd shell and use Oh My Posh for customization. F
 
 ## PowerShell
 
-Copy PowerShell folder to Documents folder (~/Documents). The Original script from [Github](https://github.com/ChrisTitusTech/powershell-profile)
+Copy PowerShell folder to Documents folder (~/Documents). The Original script from [Github](https://github.com/ChrisTitusTech/powershell-profile) and [Github Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)
 
 ## Git Bash
 
