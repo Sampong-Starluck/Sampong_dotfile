@@ -1,92 +1,195 @@
-#!/usr/bin/env bash
-## Node installation (via node version manager or NVM for Unix Like OS)
+######################################################################
+#
+#
+#           ██████╗  █████╗ ███████╗██╗  ██╗██████╗  ██████╗
+#           ██╔══██╗██╔══██╗██╔════╝██║  ██║██╔══██╗██╔════╝
+#           ██████╔╝███████║███████╗███████║██████╔╝██║     
+#           ██╔══██╗██╔══██║╚════██║██╔══██║██╔══██╗██║     
+#           ██████╔╝██║  ██║███████║██║  ██║██║  ██║╚██████╗
+#           ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
+#
+#
+######################################################################
 
-## Lazy loading nvm (method 1)
+set -o vi
 
-export NVM_DIR="$HOME/.nvm"
-mapfile -t __NODE_GLOBALS < <(find "$NVM_DIR/versions/node/"*/bin/ -maxdepth 1 -mindepth 1 -type l -print0 | xargs --null -n1 basename "$NVM_DIR" | sort --unique)
-__NODE_GLOBALS+=(node)
-__NODE_GLOBALS+=(nvm)
-__NODE_GLOBALS+=(npm)
-__NODE_GLOBALS+=(npx)
-# __NODE_GLOBALS+=(yarn)
-# __NODE_GLOBALS+=(pnpm)
+HISTTIMEFORMAT="%F %T "
 
-# instead of using --no-use flag, load nvm lazily:
-_load_nvm() {
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-}
+HISTCONTROL=ignoredups
 
-for cmd in "${__NODE_GLOBALS[@]}"; do
-    eval "function ${cmd}(){ unset -f ${__NODE_GLOBALS[*]}; _load_nvm; unset -f _load_nvm; ${cmd} \"\$@\"; }"
-done
-unset cmd __NODE_GLOBALS
+HISTSIZE=2000
 
-## lazy loading nvm (method 2)
+HISTFILESIZE=2000
 
-# lazy_load_nvm(){
-#     unset -f node
-#     export NVM_DIR="$HOME/.nvm"
-#     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# }
+shopt -s histappend
 
-# node(){
-#     lazy_load_nvm
-#     node $@
-# }
-
-# nvm() {
-#   lazy_load_nvm
-#   nvm $@
-# }
-
-# npm() {
-#   lazy_load_nvm
-#   npm $@
-# }
-
-# npx() {
-#   lazy_load_nvm
-#   npx $@
-# }
-
-## Add node to path and don't load nvm unless invoke nvm command (method 3)
-
-# Add default node to path
-# export PATH="$HOME/.nvm/versions/node/*/bin":$PATH
-
-## Load NVM
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  --no-use # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  --no-use # This loads nvm bash_completion
-
-## Original method
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Configuration
-# Theme
-export ENV_POSH_THEMES="$HOME\AppData\Local\Programs\oh-my-posh\themes"
-eval "$(oh-my-posh init bash --config "$ENV_POSH_THEMES\space.omp.json")"
-# Tools
-export PYTHONIOENCODING=utf8
-eval "$(thefuck --alias)"
-# eval $(thefuck --alias FUCK)
+blk='\[\033[01;30m\]'   # Black
+red='\[\033[01;31m\]'   # Red
+grn='\[\033[01;32m\]'   # Green
+ylw='\[\033[01;33m\]'   # Yellow
+blu='\[\033[01;34m\]'   # Blue
+pur='\[\033[01;35m\]'   # Purple
+cyn='\[\033[01;36m\]'   # Cyan
+wht='\[\033[01;37m\]'   # White
+clr='\[\033[00m\]'      # Reset
 
 # alias
 alias cls='clear'
 alias ll='ls -l'
-alias node_stable_update='nvm install node --reinstall-packages-from=node --latest-npm'
-alias node_lts_update='nvm install "lts/*" --reinstall-packages-from="$(nvm current)" --latest-npm'
 alias tree='cmd //c tree //a //f'
-alias htop='ntop'
-alias damnit='fuck'
-alias time_profile='time source ./.bash_profile'
-alias time_rc='time source ./.bashrc'
 
-# History_configuration
-# PROMPT_COMMAND='history -a'
+alias gs='git status'
+
+alias ga='git add'
+
+alias gaa='git add --all'
+
+alias gc='git commit'
+
+alias gl='git log --oneline'
+
+alias gb='git checkout -b'
+
+alias gd='git diff'
+
+alias ..='cd ..;pwd'
+
+alias ...='cd ../..;pwd'
+
+alias ....='cd ../../..;pwd'
+
+alias c='clear'
+
+alias h='history'
+
+# alias tree='tree --dirsfirst -F'
+
+alias mkdir='mkdir -p -v'
+
+# alias jan='cal -m 01'
+# alias feb='cal -m 02'
+# alias mar='cal -m 03'
+# alias apr='cal -m 04'
+# alias may='cal -m 05'
+# alias jun='cal -m 06'
+# alias jul='cal -m 07'
+# alias aug='cal -m 08'
+# alias sep='cal -m 09'
+# alias oct='cal -m 10'
+# alias nov='cal -m 11'
+# alias dec='cal -m 12'
+
+# function for git add, commit or amend
+function gcomamend () {
+	var $message;
+	if [ -z "$1" ]; then
+		$message = "--amend --no-edit";
+	else
+		$message = "-m "$1""
+	fi
+
+	git add .
+	git commit $message
+	git pull 
+	git push
+}
+
+
+function hg() {
+    history | grep "$1";
+}
+
+function find_largest_files() {
+    du -h -x -s -- * | sort -r -h | head -20;
+}
+
+function git_branch() {
+    if [ -d .git ] ; then
+        printf "%s" "($(git branch 2> /dev/null | awk '/\*/{print $2}'))";
+    fi
+}
+
+# Set the prompt.
+# function bash_prompt(){
+#     PS1='${debian_chroot:+($debian_chroot)}'${blu}'$(git_branch)'${pur}' \W'${grn}' \$ '${clr}
+# }
+
+# bash_prompt
+
+function git_init() {
+    if [ -z "$1" ]; then
+        printf "%s\n" "Please provide a directory name.";
+    else
+        mkdir "$1";
+        builtin cd "$1";
+        pwd;
+        git init;
+        touch readme.md .gitignore LICENSE;
+        echo "# $(basename $PWD)" >> readme.md
+    fi
+}
+
+# function weather_report() {
+
+#     local response=$(curl --silent 'https://api.openweathermap.org/data/2.5/weather?id=5128581&units=imperial&appid=e9c27a15a5c3f52f7ff5e139357b5283') 
+
+#     local status=$(echo $response | jq -r '.cod')
+
+#     case $status in
+		
+#         200) printf "Location: %s %s\n" "$(echo $response | jq '.name') $(echo $response | jq '.sys.country')"  
+#              printf "Forecast: %s\n" "$(echo $response | jq '.weather[].description')" 
+#              printf "Temperature: %.1f°F\n" "$(echo $response | jq '.main.temp')" 
+#              printf "Temp Min: %.1f°F\n" "$(echo $response | jq '.main.temp_min')" 
+#              printf "Temp Max: %.1f°F\n" "$(echo $response | jq '.main.temp_max')" 
+#             ;;
+#         401) echo "401 error"
+#             ;;
+#         *) echo "error"
+#             ;;
+
+#     esac
+
+# }
+
+# clear
+
+printf "\n"
+# printf "   %s\n" "IP ADDR: $(curl ifconfig.me)"
+# printf "   %s\n" "USER: $(echo $USER)"
+printf "   %s\n" "DATE: $(date)"
+# printf "   %s\n" "UPTIME: $(uptime -p)"
+# printf "   %s\n" "HOSTNAME: $(hostname -f)"
+# printf "   %s\n" "CPU: $(awk -F: '/model name/{print $2}' | head -1)"
+# printf "   %s\n" "KERNEL: $(uname -rms)"
+# printf "   %s\n" "PACKAGES: $(dpkg --get-selections | wc -l)"
+# printf "   %s\n" "RESOLUTION: $(xrandr | awk '/\*/{printf $1" "}')"
+# printf "   %s\n" "MEMORY: $(free -m -h | awk '/Mem/{print $3"/"$2}')"
+printf "\n"
+
+
+# Oh-My-Posh configuration
+export ENV_POSH_THEMES="$HOME\AppData\Local\Programs\oh-my-posh\themes"
+eval "$(oh-my-posh init bash --config "$ENV_POSH_THEMES\nordtron.omp.json")"
+
+# Tools
+
+# surreal() {
+# 	if [ "$1" == "start" ]; then
+# 		docker run --rm --pull always --name surreal_database -p 8000:8000 surrealdb/surrealdb:latest $1
+# 	else
+# 		echo "This function can only work with start command. To stop this container use Ctl+C."
+# 	fi
+	
+# }
+
+function setupNvs {
+	export NVS_HOME="$HOME\.nvs";
+	[ -s "$NVS_HOME/nvs.sh" ] && source "$NVS_HOME/nvs.sh" >> /dev/null;
+	return 0;
+}
+setupNvs
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

@@ -14,7 +14,7 @@
 ### more information about execution policies, run Get-Help about_Execution_Policies.
 
 # Import Terminal Icons
-Import-Module -Name Terminal-Icons
+#Import-Module -Name Terminal-Icons
 
 # Find out if the current user identity is elevated (has admin rights)
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -77,9 +77,9 @@ function dirs {
 function admin {
     if ($args.Count -gt 0) {   
         $argList = "& '" + $args + "'"
-        Start-Process "$psHome\powershell.exe" -Verb runAs -ArgumentList $argList
+        Start-Process "$psHome\pwsh.exe" -Verb runAs -ArgumentList $argList
     } else {
-        Start-Process "$psHome\powershell.exe" -Verb runAs
+        Start-Process "$psHome\pwsh.exe" -Verb runAs
     }
 }
 
@@ -139,6 +139,24 @@ Set-Alias -Name vim -Value $EDITOR
 
 function ll { Get-ChildItem -Path $pwd -File }
 function g { Set-Location $HOME\Documents\Github }
+function gpull{
+    param ($argument)
+    if ([string]::IsNullOrEmpty($argument)) {
+        git pull
+    } else {
+        git pull origin $argument
+    }
+
+}
+function glog {
+    param ($command)
+    if ($command -eq "deco") {
+        git log --graph --oneline --decorate
+    } else {
+        git log
+    }
+    
+}
 function gcom {
         git add .
         git commit -m "$args"
@@ -150,16 +168,64 @@ function gamend {
 function lazygcom {
         git add .
         git commit -m "$args"
+        git pull
         git push
 }
 function lazygamend {
         git add .
         git commit --amend --no-edit
+        git pull
         git push
 }
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
+
+# Import the System.Globalization namespace
+# function Get-CalendarInfo {
+#     [CmdletBinding()]
+#     param()
+#
+#     # Define the class code as a string
+#     $classCode = @"
+#     using System;
+#     using System.Globalization;
+#
+#     public class CalendarInfo
+#     {
+#         public static void GetCalendars()
+#         {
+#             CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+#             Calendar[] calendars = cultureInfo.OptionalCalendars;
+#
+#             foreach (Calendar calendar in calendars)
+#             {
+#                 Console.WriteLine(calendar.ToString());
+#             }
+#         }
+#     }
+# "@
+#
+#     # Add the class code to the AppDomain
+#     Add-Type -TypeDefinition $classCode -Language CSharp
+#
+#     # Call the GetCalendars method
+#     [CalendarInfo]::GetCalendars()
+# }
+
+
+
+# command surreal use for start surrealdb in docker namae surreal_database in port 8000
+# function surreal {
+#     param ($command)
+#     if ($command -eq "start") {
+#         docker run --rm --pull always --name surreal_database -p 8000:8000 surrealdb/surrealdb:latest $command
+#     } else {
+#         Write-Output "This command is invalid, Exit surrealDB use ctl+c shortcut."
+#     }
+#
+# }
+
 function uptime {
     #Windows Powershell    
     <# Get-WmiObject win32_operatingsystem | Select-Object csname, @{
@@ -232,10 +298,10 @@ function pgrep($name) {
 
 ## Un comment command below if the module is already installed (Terminal-icon, Oh-my-posh, Chocolatey)
 ## Add icon
-Import-Module Terminal-Icons
+#Import-Module Terminal-Icons
 
 ## Final Line to set prompt
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/space.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/emodipt.omp.json" | Invoke-Expression
 
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
