@@ -28,12 +28,54 @@ I created this dotfile repository for save all my shell config and use it after 
 
 ## Command Promt (Clink)
 
-I used clink for modernize the cmd shell and use Oh My Posh for customization. Follow the cofigure from clink and ohmyposh manual.
+I used clink for modernize the cmd shell and use Oh My Posh for customization. Follow the cofigure from clink and
+ohmyposh manual.
 
 ## PowerShell
 
-Copy PowerShell folder to Documents folder (~/Documents). The Original script from [Github](https://github.com/ChrisTitusTech/powershell-profile) and [Github Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)
+- Run this line (or similar) from an elevated PowerShell prompt:
+
+```shell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+```
+
+- Create Powershell profile:
+
+```shell
+New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
+```
+
+- Finally run :
+
+```shell
+notepad $profile
+```
+
+- Add this code to `$profile`
+
+```shell
+ Import-Module (Resolve-Path('$PATH\PowerShell\posh_profile.ps1'))
+```
+
+Restart the terminal.
 
 ## Git Bash
 
-Copy .bashrc to home dir.(~)
+- Create `.basrc` file
+
+```shell
+vim ~/.bashrc
+```
+
+- Paste this into .bashrc file
+
+```shell
+export DIR="<path>\bash"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/main.sh"
+```
+
+# Source
+
+The Original script from [Github](https://github.com/ChrisTitusTech/powershell-profile)
+and [Github Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)

@@ -1,5 +1,5 @@
 ### PowerShell template profile 
-### Version 1.03 - Tim Sneath <tim@sneath.org>
+### Version 1.00 - Lim Sampong <sampong.lim@gmail.com>
 ### From https://gist.github.com/timsneath/19867b12eee7fd5af2ba
 ###
 ### This file should be stored in $PROFILE.CurrentUserAllHosts
@@ -136,7 +136,6 @@ if (Test-CommandExists nvim) {
 }
 Set-Alias -Name vim -Value $EDITOR
 
-
 function ll { Get-ChildItem -Path $pwd -File }
 function g { Set-Location $HOME\Documents\Github }
 function gpull{
@@ -165,11 +164,50 @@ function gamend {
         git add .
         git commit --amend --no-edit
 }
+# function lazygcom {
+#         git add .
+#         git commit -m "$args"
+#         git pull
+#         git push
+# }
 function lazygcom {
-        git add .
-        git commit -m "$args"
-        git pull
-        git push
+  # Parse the command line arguments
+  param(
+    [Parameter(Mandatory = $true)]
+    [string] $Branch = "development",
+    [string] $Message = "daily update"
+  )
+
+  # Extract options and values
+  $options = @{}
+  foreach ($arg in $args) {
+    if ($arg.StartsWith('--')) {
+      $optionName = $arg.Substring(2)
+      $options[$optionName] = $args | Where-Object { $_ -ne $arg } | Select-Object -First 1
+    } else {
+      $optionName = $arg.Substring(1)
+      $options[$optionName] = $args | Where-Object { $_ -ne $arg } | Select-Object -First 1
+    }
+  }
+
+  # Override default values with options
+  $Branch = if ($options["branch"]) { $options["branch"] } else { $Branch }
+  $Message = if ($options["message"]) { $options["message"] } else { $Message }
+
+  # Execute git commands
+  git add .
+  git commit -m $Message
+
+  if (-not $Branch) {
+    # --branch is not present, run git pull
+    git pull
+  } else {
+    # --branch is present, run git pull with the specified branch as well as current branch
+    git pull
+    git pull origin $Branch
+  }
+
+  git push
 }
 function lazygamend {
         git add .
@@ -180,40 +218,6 @@ function lazygamend {
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
-
-# Import the System.Globalization namespace
-# function Get-CalendarInfo {
-#     [CmdletBinding()]
-#     param()
-#
-#     # Define the class code as a string
-#     $classCode = @"
-#     using System;
-#     using System.Globalization;
-#
-#     public class CalendarInfo
-#     {
-#         public static void GetCalendars()
-#         {
-#             CultureInfo cultureInfo = CultureInfo.CurrentCulture;
-#             Calendar[] calendars = cultureInfo.OptionalCalendars;
-#
-#             foreach (Calendar calendar in calendars)
-#             {
-#                 Console.WriteLine(calendar.ToString());
-#             }
-#         }
-#     }
-# "@
-#
-#     # Add the class code to the AppDomain
-#     Add-Type -TypeDefinition $classCode -Language CSharp
-#
-#     # Call the GetCalendars method
-#     [CalendarInfo]::GetCalendars()
-# }
-
-
 
 # command surreal use for start surrealdb in docker namae surreal_database in port 8000
 # function surreal {
@@ -295,13 +299,16 @@ function pkill($name) {
 function pgrep($name) {
     Get-Process $name
 }
+function pport {
+    netstat -aon | findstr "$args"
+}
 
 ## Un comment command below if the module is already installed (Terminal-icon, Oh-my-posh, Chocolatey)
 ## Add icon
 #Import-Module Terminal-Icons
 
 ## Final Line to set prompt
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/emodipt.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/kali.omp.json" | Invoke-Expression
 
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
@@ -312,3 +319,9 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/emodipt.omp.json" | Invoke-
 # if (Test-Path($ChocolateyProfile)) {
 #   Import-Module "$ChocolateyProfile"
 # }
+
+#f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
+
+Import-Module -Name Microsoft.WinGet.CommandNotFound
+#f45873b3-b655-43a6-b217-97c00aa0db58
+# Invoke-Expression "$(vfox activate pwsh)"

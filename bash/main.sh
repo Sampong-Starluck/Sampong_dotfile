@@ -170,26 +170,9 @@ printf "\n"
 
 # Oh-My-Posh configuration
 export ENV_POSH_THEMES="$HOME\AppData\Local\Programs\oh-my-posh\themes"
-eval "$(oh-my-posh init bash --config "$ENV_POSH_THEMES\nordtron.omp.json")"
+eval "$(oh-my-posh init bash --config "$ENV_POSH_THEMES\darkblood.omp.json")"
 
-# Tools
 
-# surreal() {
-# 	if [ "$1" == "start" ]; then
-# 		docker run --rm --pull always --name surreal_database -p 8000:8000 surrealdb/surrealdb:latest $1
-# 	else
-# 		echo "This function can only work with start command. To stop this container use Ctl+C."
-# 	fi
-	
-# }
-
-function setupNvs {
-	export NVS_HOME="$HOME\.nvs";
-	[ -s "$NVS_HOME/nvs.sh" ] && source "$NVS_HOME/nvs.sh" >> /dev/null;
-	return 0;
-}
-setupNvs
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+eval "$(vfox activate bash)"
