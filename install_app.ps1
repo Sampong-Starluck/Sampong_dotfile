@@ -12,7 +12,6 @@ $apps = @(
     "Microsoft.VisualStudioCode"
     "JetBrains.Toolbox"
     "Git.Git"
-    "PremiumSoft.NavicatPremium"
 )
 
 # Check if winget is installed
