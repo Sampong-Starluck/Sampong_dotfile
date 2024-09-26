@@ -12,6 +12,7 @@ $apps = @(
     "Microsoft.VisualStudioCode"
     "JetBrains.Toolbox"
     "Notepad++.Notepad++"
+    "version-fox.vfox"
     "Git.Git"
 )
 
