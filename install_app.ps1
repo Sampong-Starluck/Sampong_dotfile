@@ -11,6 +11,7 @@ $apps = @(
     "Mozilla.Firefox.DeveloperEdition"
     "Microsoft.VisualStudioCode"
     "JetBrains.Toolbox"
+    "Notepad++.Notepad++"
     "Git.Git"
 )
 
@@ -24,37 +25,6 @@ if (Get-Command winget -ErrorAction SilentlyContinue) {
 foreach ($app in $apps) {
     winget install -e --id $app
 }
-
-# function Set-EnvironmentVariable($variableName, $value) {
-#     $env:variableName = $value
-# }
-
-# # Find path for git command and git to path
-# $git = Get-Command git | Select-Object Path
-# Set-EnvironmentVariable "Path" $git
-# Start-Process $git
-
-# install NVS for node JS environment
-#& "$git" -c """export NVS_HOME="$HOME/.nvs"
-#git clone https://github.com/jasongin/nvs "$NVS_HOME"
-#. "$NVS_HOME/nvs.sh" install"""
-
-# restart bash CLI
-#& "$git" -c "source ~/.bashrc"
-
-# install nodeJs using nvs command
-#& "$git" -c "nvs add 18.16.0 && nvs link 18.16.0"
-
-# # Get the value of the NVS_HOME environment variable.
-# $NVS_HOME = "$env:USERPROFILE\.nvs"
-
-# $nvsHome = Set-EnvironmentVariable "NVS_HOME" $NVS_HOME
-
-# # Get the value of the PATH environment variable.
-# $path = Get-EnvironmentVariable PATH
-
-# # Add the path `%NVS_HOME%\default` to the PATH environment variable.
-# $path += ";$nvsHome\default"
 
 # Pause to let the user check the results
 Write-Host "Press Enter to continue..."
