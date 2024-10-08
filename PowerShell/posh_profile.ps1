@@ -219,6 +219,22 @@ function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
 
+# Start Ngork with multiple ports: (cmd: Start-Ngrok 8000 8080 8081)
+function Start-Ngrok {
+    param (
+        [Parameter(Mandatory=$true, ValueFromRemainingArguments=$true)]
+        [int[]]$Ports
+    )
+
+    if (-not $Ports) {
+        throw "You must provide at least one port number."
+    }
+    
+    foreach ($Port in $Ports) {
+        ngrok http $Port --request-header-add ngrok-skip-browser-warning:true
+    }
+}
+
 # command surreal use for start surrealdb in docker namae surreal_database in port 8000
 # function surreal {
 #     param ($command)
