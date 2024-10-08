@@ -2,6 +2,10 @@
 
 I created this dotfile repository for save all my shell config and use it after I reset or change my PC.
 
+### Next push
+
+I will create a script for auto add nu config.
+
 ## Prerequisites
 
 - [Oh My Posh](https://ohmyposh.dev/)
@@ -18,6 +22,7 @@ I have replace both SDKMAN and NVS(NPM) with [Version-fox(vfox)](https://github.
 - PowerShell 7
 - Command Prompt
 - Bash (Git Bash, Cywin)
+- Nu shell
 
 ## Terminal Emulator
 

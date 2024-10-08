@@ -14,6 +14,11 @@ $apps = @(
     "Notepad++.Notepad++"
     "version-fox.vfox"
     "Git.Git"
+    "TheBrowserCompany.Arc"
+    "Telegram.TelegramDesktop"
+    "Telegram.Unigram"
+    "Zen-Team.Zen-Browser"
+    "Nushell.Nushell"
 )
 
 # Check if winget is installed
