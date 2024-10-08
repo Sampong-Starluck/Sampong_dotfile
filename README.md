@@ -10,6 +10,9 @@ I created this dotfile repository for save all my shell config and use it after 
 - [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm)
 - [Clink (For customize CMD)](https://github.com/chrisant996/clink)
 
+### Replace NVM
+I have replace both SDKMAN and NVS(NPM) with [Version-fox(vfox)](https://github.com/version-fox/vfox) for both Java and NodeJS.
+
 ## Shell
 
 - PowerShell 7
