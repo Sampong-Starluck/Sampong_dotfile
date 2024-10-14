@@ -3,6 +3,13 @@
 # - Chrome
 # - Firefox
 # - Notepad++
+# - Jetbrain toolbox
+# - Tabby terminal
+# - Powershell 7
+# - Telegram and Unigram
+# - Arc browser
+# - Zen browser
+# - Nu shell
 
 # Create a list of apps to install
 $apps = @(
@@ -14,7 +21,6 @@ $apps = @(
     "Notepad++.Notepad++"
     "Nilesoft.Shell"
     "version-fox.vfox"
-    "Git.Git"
     "TheBrowserCompany.Arc"
     "Telegram.TelegramDesktop"
     "Telegram.Unigram"
