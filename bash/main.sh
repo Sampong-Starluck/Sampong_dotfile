@@ -172,7 +172,7 @@ printf "\n"
 export ENV_POSH_THEMES="$HOME\AppData\Local\Programs\oh-my-posh\themes"
 eval "$(oh-my-posh init bash --config "$ENV_POSH_THEMES\darkblood.omp.json")"
 
-
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+# Load vfox(Version-fox) for SDK managerment for bash script
 eval "$(vfox activate bash)"

@@ -1,8 +1,17 @@
 # This script will install the following apps using winget:
 # - Visual Studio Code
-# - Chrome
-# - Firefox
+# - Arc browser
+# - Zen browser
+# - Firefox aurora
 # - Notepad++
+# - PowerShell
+# - Tabby terminal
+# - OBSStudio
+# - JetBrains Toolbox
+# - Nushell
+# - Telegram/Unigram
+# - Version-fox(vfox)
+# - Nilesoft
 
 # Create a list of apps to install
 $apps = @(
@@ -15,6 +24,7 @@ $apps = @(
     "Nilesoft.Shell"
     "version-fox.vfox"
     "Git.Git"
+    "OBSProject.OBSStudio"
     "TheBrowserCompany.Arc"
     "Telegram.TelegramDesktop"
     "Telegram.Unigram"
