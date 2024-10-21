@@ -23,7 +23,6 @@ $apps = @(
     "Notepad++.Notepad++"
     "Nilesoft.Shell"
     "version-fox.vfox"
-    "Git.Git"
     "OBSProject.OBSStudio"
     "TheBrowserCompany.Arc"
     "Telegram.TelegramDesktop"
