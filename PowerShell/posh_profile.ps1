@@ -86,7 +86,7 @@ function admin {
 # Set UNIX-like aliases for the admin command, so sudo <command> will run the command
 # with elevated rights. 
 Set-Alias -Name su -Value admin
-# Set-Alias -Name sudo -Value admin
+Set-Alias -Name sudo -Value admin
 
 
 # Make it easy to edit this profile once it's installed
