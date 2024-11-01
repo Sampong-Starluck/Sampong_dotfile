@@ -34,7 +34,7 @@ I have replaced SDKMAN and NVS (Node Version Switcher) with [Version-fox (vfox)]
 
 ### Using Script
 
-To install the configuration using a script, run the following command:
+To install the configuration using a script, modify path in the script to correct file path and run the following command:
 
 ```shell
 ./install_app.ps1
