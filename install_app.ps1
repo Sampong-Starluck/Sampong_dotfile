@@ -92,7 +92,7 @@ if (-not (Test-Path $PROFILE.CurrentUserAllHosts)) {
 }
 
 # Add oh-my-posh import command to PowerShell profile
-$poshProfileCommand = 'Import-Module (Resolve-Path "$HOME\PowerShell\posh_profile.ps1")'
+$poshProfileCommand = 'Import-Module (Resolve-Path "$HOME\Documents\PowerShell\posh_profile.ps1")'
 Add-Content -Path $PROFILE.CurrentUserAllHosts -Value "`n$poshProfileCommand"
 
 # Create ~/.bashrc file and add commands
