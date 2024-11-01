@@ -1,10 +1,6 @@
-# Dotfile
+# Personal Dotfile Repository
 
-I created this dotfile repository for save all my shell config and use it after I reset or change my PC.
-
-### Next push
-
-I will create a script for auto add nu config.
+This repository is created to save all my shell configurations, allowing for easy restoration after resetting or changing my PC.
 
 ## Prerequisites
 
@@ -12,78 +8,91 @@ I will create a script for auto add nu config.
 - [Vim](https://www.vim.org/)
 - [Neovim](https://neovim.io/)
 - [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm)
-- [Clink (For customize CMD)](https://github.com/chrisant996/clink)
+- [Clink (for customizing CMD)](https://github.com/chrisant996/clink)
 
-### Replace NVM
-I have replace both SDKMAN and NVS(NPM) with [Version-fox(vfox)](https://github.com/version-fox/vfox) for both Java and NodeJS.
+### Replacing NVM
+I have replaced SDKMAN and NVS (Node Version Switcher) with [Version-fox (vfox)](https://github.com/version-fox/vfox) for both Java and NodeJS.
 
-## Shell
+## Shells Supported
 
 - PowerShell 7
 - Command Prompt
-- Bash (Git Bash, Cywin)
-- Nu shell
+- Bash (Git Bash, Cygwin)
+- Nushell
 
-## Terminal Emulator
+## Terminal Emulators
 
 - [Tabby Terminal](https://tabby.sh/)
 - [Windows Terminal](https://github.com/microsoft/terminal)
 
-## Command Line base text editor
+## Command Line-based Text Editors
 
 - Vim
 - Neovim
 
-## Command Promt (Clink)
+## Installation
 
-I used clink for modernize the cmd shell and use Oh My Posh for customization. Follow the cofigure from clink and
-ohmyposh manual.
+### Using Script
 
-## PowerShell
-
-- Run this line (or similar) from an elevated PowerShell prompt:
+To install the configuration using a script, run the following command:
 
 ```shell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+./install_app.ps1
 ```
 
-- Create Powershell profile:
+**Warning:** This script has not been tested extensively and might not work as intended or could cause unwanted effects. Manual configuration is recommended.
 
-```shell
-New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
-```
+### Manual Installation
 
-- Finally run :
+#### Command Prompt (Clink)
 
-```shell
-notepad $profile
-```
+I use Clink to modernize the Command Prompt shell and Oh My Posh for customization. Follow the Clink and Oh My Posh manuals for setup instructions.
 
-- Add this code to `$profile`
+#### PowerShell
 
-```shell
- Import-Module (Resolve-Path('$PATH\PowerShell\posh_profile.ps1'))
-```
+1. Run this command from an elevated PowerShell prompt:
 
-Restart the terminal.
+    ```shell
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+    ```
 
-## Git Bash
+2. Create a PowerShell profile:
 
-- Create `.basrc` file
+    ```shell
+    New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
+    ```
 
-```shell
-vim ~/.bashrc
-```
+3. Edit the profile by running:
 
-- Paste this into .bashrc file
+    ```shell
+    notepad $PROFILE
+    ```
 
-```shell
-export DIR="<path>\bash"
-if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
-. "$DIR/main.sh"
-```
+4. Add the following code to `$PROFILE`:
 
-# Source
+    ```shell
+    Import-Module (Resolve-Path '$PATH\PowerShell\posh_profile.ps1')
+    ```
 
-The Original script from [Github](https://github.com/ChrisTitusTech/powershell-profile)
-and [Github Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)
+5. Restart the terminal.
+
+#### Git Bash
+
+1. Create a `.bashrc` file:
+
+    ```shell
+    vim ~/.bashrc
+    ```
+
+2. Paste the following into the `.bashrc` file:
+
+    ```shell
+    export DIR="<path>/bash"
+    if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+    . "$DIR/main.sh"
+    ```
+
+## Source
+
+The original scripts are from [Chris Titus Tech's GitHub](https://github.com/ChrisTitusTech/powershell-profile) and [Tim Sneath's GitHub Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba).
+
