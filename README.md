@@ -12,6 +12,9 @@ Before proceeding, ensure you have the following tools installed:
 - **Text Editors**:
    - [Vim](https://www.vim.org/)
    - [Neovim](https://neovim.io/)
+   - Notepad
+   - [Notepad++](https://notepad-plus-plus.org/)
+   - [Visual Studio Code](https://code.visualstudio.com/)
 - **Command Prompt Enhancements**: [Clink](https://github.com/chrisant996/clink) (for customizing CMD)
 - **Version Management**: [Version-fox (vfox)](https://github.com/version-fox/vfox) (replaces SDKMAN for Java and NVS for Node.js)
 
@@ -20,7 +23,7 @@ Before proceeding, ensure you have the following tools installed:
 ## Supported Shells
 
 - **PowerShell**: [PowerShell 7](https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.4)
-- **Command Prompt**: Enhanced with Clink
+- **Command Prompt**: Enhanced with [Clink](https://github.com/chrisant996/clink)
 - **Bash**: [Git Bash](https://git-scm.com/), [Cygwin](https://cygwin.com/)
 - **Nushell**: [Nushell](https://www.nushell.sh/)
 
@@ -54,7 +57,7 @@ Run the provided script to set up your environment.
 
 #### 1. Command Prompt (Clink)
 
-- Install and configure Clink as per the [official documentation](https://ohmyposh.dev/docs/installation/prompt).
+- Install and configure Oh My Posh in Clink as per the [official documentation](https://ohmyposh.dev/docs/installation/prompt).
 - Customize using Oh My Posh.
 
 #### 2. PowerShell Configuration
