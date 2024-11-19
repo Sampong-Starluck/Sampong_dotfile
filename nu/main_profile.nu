@@ -50,6 +50,11 @@
         git push
     }
 
+    # Git command for get project status
+    export def gstat [] {
+        git status
+    }
+
     # Lazy git amend, pull, and push
     export def lazygamend [] {
         git add .
@@ -67,4 +72,13 @@
     export def load_theme [theme: string] {
         let path = $env.POSH_THEMES_PATH
         oh-my-posh init nu --config "$path/catppuccin_frappe.omp.json"
+    }
+
+    # Git command for git checkout
+    export def gcheck [branch?: string] {
+         if ($branch | is-empty) {
+             echo "Please add branch argument !!!"
+         } else {
+             git checkout $branch
+         }
     }

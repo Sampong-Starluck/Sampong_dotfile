@@ -1,98 +1,140 @@
 # Personal Dotfile Repository
 
-This repository is created to save all my shell configurations, allowing for easy restoration after resetting or changing my PC.
+This repository is designed to save all my shell configurations, enabling easy restoration after resetting or changing a PC/laptop.
+
+---
 
 ## Prerequisites
 
-- [Oh My Posh](https://ohmyposh.dev/)
-- [Vim](https://www.vim.org/)
-- [Neovim](https://neovim.io/)
-- [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm)
-- [Clink (for customizing CMD)](https://github.com/chrisant996/clink)
+Before proceeding, ensure you have the following tools installed:
 
-### Replacing NVM
-I have replaced SDKMAN and NVS (Node Version Switcher) with [Version-fox (vfox)](https://github.com/version-fox/vfox) for both Java and NodeJS.
+- **Shell Prompt Customization**: [Oh My Posh](https://ohmyposh.dev/)
+- **Text Editors**:
+   - [Vim](https://www.vim.org/)
+   - [Neovim](https://neovim.io/)
+- **Command Prompt Enhancements**: [Clink](https://github.com/chrisant996/clink) (for customizing CMD)
+- **Version Management**: [Version-fox (vfox)](https://github.com/version-fox/vfox) (replaces SDKMAN for Java and NVS for Node.js)
 
-## Shells Supported
+---
 
-- PowerShell 7
-- Command Prompt
-- Bash (Git Bash, Cygwin)
-- Nushell
+## Supported Shells
 
-## Terminal Emulators
+- **PowerShell**: [PowerShell 7](https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.4)
+- **Command Prompt**: Enhanced with Clink
+- **Bash**: [Git Bash](https://git-scm.com/), [Cygwin](https://cygwin.com/)
+- **Nushell**: [Nushell](https://www.nushell.sh/)
+
+---
+
+## Recommended Terminal Emulators
 
 - [Tabby Terminal](https://tabby.sh/)
 - [Windows Terminal](https://github.com/microsoft/terminal)
 
-## Command Line-based Text Editors
+---
 
-- Vim
-- Neovim
+## Installation Guide
 
-## Installation
+### Option 1: Script Installation
 
-### Using Script
+Run the provided script to set up your environment.
 
-To install the configuration using a script, modify path in the script to correct file path and run the following command:
-
-```shell
-./install_app.ps1
-```
-
-**Warning:** This script has not been tested extensively and might not work as intended or could cause unwanted effects. Manual configuration is recommended.
-
-### Manual Installation
-
-#### Command Prompt (Clink)
-
-I use Clink to modernize the Command Prompt shell and Oh My Posh for customization. Follow the Clink and Oh My Posh manuals for setup instructions.
-
-#### PowerShell
-
-1. Run this command from an elevated PowerShell prompt:
+1. Modify the file paths in `install_app.ps1` to match your system.
+2. Execute the script:
 
     ```shell
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+    ./install_app.ps1
     ```
+
+⚠ **Warning**: The script may have unintended side effects. Manual installation is recommended for better control.
+
+---
+
+### Option 2: Manual Installation
+
+#### 1. Command Prompt (Clink)
+
+- Install and configure Clink as per the [official documentation](https://ohmyposh.dev/docs/installation/prompt).
+- Customize using Oh My Posh.
+
+#### 2. PowerShell Configuration
+
+1. Allow execution of scripts:
+
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+   ```
 
 2. Create a PowerShell profile:
 
-    ```shell
-    New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
-    ```
+   ```powershell
+   New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
+   ```
 
-3. Edit the profile by running:
+3. Edit the profile:
 
-    ```shell
-    notepad $PROFILE
-    ```
+   ```powershell
+   notepad $PROFILE
+   ```
 
-4. Add the following code to `$PROFILE`:
+4. Add the following line to the profile file:
 
-    ```shell
-    Import-Module (Resolve-Path '$PATH\PowerShell\posh_profile.ps1')
-    ```
+   ```powershell
+   Import-Module (Resolve-Path '<path-to>/PowerShell/posh_profile.ps1')
+   ```
 
 5. Restart the terminal.
-
-#### Git Bash
+---
+#### 3. Git Bash Configuration
 
 1. Create a `.bashrc` file:
-
     ```shell
     vim ~/.bashrc
     ```
 
-2. Paste the following into the `.bashrc` file:
-
+2. Add the following:
     ```shell
     export DIR="<path>/bash"
     if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
     . "$DIR/main.sh"
     ```
 
+#### 4. Nushell Configuration
+
+1. Edit the Nu environment file:
+
+   ```nu
+   open $nu.env-path | edit
+   ```
+
+   Add this line to initialize Oh My Posh on startup:
+
+   ```nu
+   oh-my-posh init nu --config "~/AppData/Local/Programs/oh-my-posh/themes/spaceship.omp.json"
+   ```
+
+2. Edit the Nu configuration file:
+
+   ```nu
+   open $nu.config-path | edit
+   ```
+
+   Add the following lines:
+
+   ```nu
+   source ~/.oh-my-posh.nu
+   let-env EDITOR = "code"
+   use ~/Documents/Sampong_dotfile/nu/main_profile.nu
+   use main_profile *
+   ```
+
+3. Save and restart the shell.
+
+---
+
 ## Source
 
-The original scripts are from [Chris Titus Tech's GitHub](https://github.com/ChrisTitusTech/powershell-profile) and [Tim Sneath's GitHub Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba).
+This repository incorporates scripts and ideas from:
 
+- [Chris Titus Tech's GitHub](https://github.com/ChrisTitusTech/powershell-profile)
+- [Tim Sneath's GitHub Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)
