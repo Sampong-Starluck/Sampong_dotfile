@@ -1,11 +1,1 @@
-[credential "https://dtic.idealinkconsulting.com"]
-	provider = generic
-[user]
-	name = Sampong-Starluck
-	email = sampong.lim@gmail.com
 
-[credential "https://github.com"]
-    provider = generic
-[user]
-    name = Sampong-Starluck
-    email = 55474542+Sampong-Starluck@users.noreply.github.com
