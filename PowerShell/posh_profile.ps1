@@ -86,7 +86,7 @@ function admin {
 # Set UNIX-like aliases for the admin command, so sudo <command> will run the command
 # with elevated rights. 
 Set-Alias -Name su -Value admin
-Set-Alias -Name sudo -Value admin
+# Set-Alias -Name sudo -Value admin
 
 
 # Make it easy to edit this profile once it's installed
@@ -317,6 +317,29 @@ function pgrep($name) {
 }
 function pport {
     netstat -aon | findstr "$args"
+}
+
+function Clear-Cache {
+    # add clear cache logic here
+    Write-Host "Clearing cache..." -ForegroundColor Cyan
+
+    # Clear Windows Prefetch
+    Write-Host "Clearing Windows Prefetch..." -ForegroundColor Yellow
+    Remove-Item -Path "$env:SystemRoot\Prefetch\*" -Force -ErrorAction SilentlyContinue
+
+    # Clear Windows Temp
+    Write-Host "Clearing Windows Temp..." -ForegroundColor Yellow
+    Remove-Item -Path "$env:SystemRoot\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    # Clear User Temp
+    Write-Host "Clearing User Temp..." -ForegroundColor Yellow
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    # Clear Internet Explorer Cache
+    Write-Host "Clearing Internet Explorer Cache..." -ForegroundColor Yellow
+    Remove-Item -Path "$env:LOCALAPPDATA\Microsoft\Windows\INetCache\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-Host "Cache clearing completed." -ForegroundColor Green
 }
 
 ## Un comment command below if the module is already installed (Terminal-icon, Oh-my-posh, Chocolatey)

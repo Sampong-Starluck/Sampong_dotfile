@@ -1,84 +1,120 @@
-# List files in the current directory
-    export def ll [] {
-        ls | where type == 'File'
-    }
+# List files in current directory
+export def ll [] { ls | where type == 'File' }
 
-    # Change to GitHub directory (needs def-env if modifying the environment)
-    export def g [] {
-        cd ~/Documents/Github
-    }
+# Change to GitHub directory
+export def g [] { 
+    # Use the full path to ensure compatibility
+    cd ~/Documents/Github
+}
 
-    # Git pull with up to two optional arguments
-    export def gpull [branch?: string] {
-        if ($branch | is-empty) {
-            git pull 
-        } else {
-            git pull origin $branch
+# Git pull with smart origin handling
+export def gpull [branch?: string] {
+    git pull origin ($branch | default (git branch --show-current))
+}
+
+# Git log with optional formatting
+export def glog [decorative: bool = false] {
+    if $decorative {
+        git log --graph --oneline --decorate
+    } else {
+        git log
+    }
+}
+
+# Git commands with sensible defaults
+export def gcom [message: string] { 
+    git add .
+    git commit -m $message 
+}
+
+export def gamend [] { 
+    git add .
+    git commit --amend --no-edit 
+}
+
+export def gstat [] { git status }
+
+# Smart git checkout with validation
+export def gcheck [branch?: string] {
+    if ($branch | is-empty) { 
+        echo "Error: Branch name required"
+        return
+    } 
+    
+    git checkout $branch
+}
+
+# Combined lazy git workflows
+export def lazygit [
+    message?: string,
+    amend: bool = false,
+    branch: string = "",
+    no_pull: bool = false,
+    no_push: bool = false
+] {
+    # Get current branch if none specified
+    let br = if ($branch | is-empty) { 
+        git branch --show-current
+    } else {
+        $branch
+    }
+    
+    # Add changes
+    git add .
+    
+    # Commit changes (amend or new)
+    if $amend {
+        git commit --amend --no-edit
+    } else if (not ($message | is-empty)) {
+        git commit -m $message
+    } else if (not $amend) {
+        echo "Error: Commit message required when not amending"
+        return
+    }
+    
+    # Pull changes (if not disabled)
+    if (not $no_pull) { git pull origin $br }
+    
+    # Push changes (if not disabled)
+    if (not $no_push) { git push }
+}
+
+# Get public IP address
+export def get-pubip [] {
+    curl --silent http://ifconfig.me/ip | str trim
+}
+
+# Load Oh My Posh theme
+export def load_theme [theme: string = "catppuccin_frappe"] {
+    let theme_path = $"($env.POSH_THEMES_PATH)/($theme).omp.json"
+    
+    if (not ($theme_path | path exists)) {
+        echo $"Theme not found: ($theme)"
+        return
+    }
+    
+    oh-my-posh init nu --config $theme_path
+}
+
+# Startup configuration
+export def startup [] {
+    # Configure settings in one go
+    $env.config = {
+        show_banner: false
+        history: {
+            file_format: sqlite
+            max_size: 1_000_000
+            sync_on_enter: true
+            isolation: true
         }
     }
-
-    # Git log with optional 'deco' command
-    export def glog [command?] {
-        if $command == 'deco' {
-            git log --graph --oneline --decorate
-        } else {
-            git log
-        }
+    
+    # Set editor with priority: nvim > vim > code
+    $env.config.buffer_editor = if (which nvim | length) > 0 {
+        "nvim"
+    } else if (which vim | length) > 0 {
+        "vim"
+    } else {
+        "code"
     }
-
-    # Git add and commit with a message
-    export def gcom [message: string] {
-        git add .
-        git commit -m $message
-    }
-
-    # Git add and amend the last commit without editing
-    export def gamend [] {
-        git add .
-        git commit --amend --no-edit
-    }
-
-    # Lazy git commit, pull, and push
-    export def lazygcom [
-        message: string,
-        --branch(-b): string = "development"
-    ] {
-        git add .
-        git commit -m $message
-
-        git pull origin $branch
-        git push
-    }
-
-    # Git command for get project status
-    export def gstat [] {
-        git status
-    }
-
-    # Lazy git amend, pull, and push
-    export def lazygamend [] {
-        git add .
-        git commit --amend --no-edit
-        git pull
-        git push
-    }
-
-    # Get public IP address
-    export def get-pubip [] {
-        curl http://ifconfig.me/ip | str trim
-    }
-
-    # Load the Oh My Posh theme (if it modifies the environment, use def-env)
-    export def load_theme [theme: string] {
-        let path = $env.POSH_THEMES_PATH
-        oh-my-posh init nu --config "$path/catppuccin_frappe.omp.json"
-    }
-
-    # Git command for git checkout
-    export def gcheck [branch?: string] {
-         if ($branch | is-empty) {
-             echo "Please add branch argument !!!"
-         } else {
-             git checkout $branch
-         }
-    }
+}

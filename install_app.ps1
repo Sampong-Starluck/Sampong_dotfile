@@ -12,45 +12,72 @@
 # - Telegram/Unigram
 # - Version-fox(vfox)
 # - Nilesoft
+# - Google Chrome
 
-# Create a list of apps to install
+
+# Define apps to install
 $apps = @(
-    "Microsoft.PowerShell",
-    "Eugeny.Tabby",
-    "Mozilla.Firefox.DeveloperEdition",
-    "Microsoft.VisualStudioCode",
     "JetBrains.Toolbox",
+    "Mozilla.Firefox.DeveloperEdition",
+    "version-fox.vfox",
+    "Zen-Team.Zen-Browser",
+    "Microsoft.VisualStudioCode",
     "Notepad++.Notepad++",
     "Nilesoft.Shell",
-    "version-fox.vfox",
     "OBSProject.OBSStudio",
     "TheBrowserCompany.Arc",
     "Telegram.TelegramDesktop",
-    "Telegram.Unigram",
-    "Zen-Team.Zen-Browser",
-    "Nushell.Nushell"
+    "Eugeny.Tabby",
+    "Nushell.Nushell",
+    "Google.Chrome",
+    "JanDeDobbeleer.OhMyPosh" # Added Oh My Posh installation
 )
 
-# Check if winget is installed
+# Check and install winget if needed
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    Write-Host "winget is not installed. Attempting to install..." -ForegroundColor Yellow
-    Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$HOME\Downloads\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-    Add-AppxPackage -Path "$HOME\Downloads\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Error "winget installation failed. Please install winget manually and try again."
-        exit
+    Write-Host "Installing winget..." -ForegroundColor Yellow
+    
+    # More reliable installation method
+    $progressPreference = 'silentlyContinue'
+    $latestWingetMsixBundleUri = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+    $appInstallerPath = "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+    
+    Invoke-WebRequest -Uri $latestWingetMsixBundleUri -OutFile $appInstallerPath
+    Add-AppxPackage -Path $appInstallerPath
+    
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        Write-Host "winget successfully installed." -ForegroundColor Green
+    } else {
+        Write-Host "winget installation failed. Please install manually." -ForegroundColor Red
+        exit 1
     }
-    Write-Host "winget successfully installed." -ForegroundColor Green
 }
 
-# Loop through the list of apps and install them
+# Install apps
+Write-Host "Installing applications..." -ForegroundColor Cyan
 foreach ($app in $apps) {
-    try {
-        Write-Host "Attempting to install: $app" -ForegroundColor Cyan
-        winget install -e --id $app --accept-source-agreements --accept-package-agreements
-    } catch {
-        Write-Error "Failed to install: $app. Error: $_"
+    Write-Host "Installing $app..." -ForegroundColor Cyan
+    winget install -e --id $app --accept-source-agreements --accept-package-agreements
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Failed to install $app. Exit code: $LASTEXITCODE" -ForegroundColor Red
     }
+}
+
+# Create dotfiles directory if it doesn't exist
+$dotfilesDir = "$HOME\Documents\Sampong_dotfile"
+if (-not (Test-Path $dotfilesDir)) {
+    Write-Host "Creating dotfiles directory at $dotfilesDir" -ForegroundColor Yellow
+    New-Item -Path $dotfilesDir -ItemType Directory -Force
+    
+    # Create subdirectories for different shell configs
+    New-Item -Path "$dotfilesDir\nu" -ItemType Directory -Force
+    New-Item -Path "$dotfilesDir\PowerShell" -ItemType Directory -Force
+    New-Item -Path "$dotfilesDir\bash" -ItemType Directory -Force
+    
+    # Create placeholder files with basic content
+    Set-Content -Path "$dotfilesDir\nu\main_profile.nu" -Value '# Your NuShell customizations go here'
+    Set-Content -Path "$dotfilesDir\PowerShell\posh_profile.ps1" -Value '# Your PowerShell customizations go here'
+    Set-Content -Path "$dotfilesDir\bash\main.sh" -Value '# Your Bash customizations go here'
 }
 
 ########################################################################
@@ -59,58 +86,81 @@ foreach ($app in $apps) {
 #                      Commend this part if not needed                 #
 ########################################################################
 
-# Add oh-my-posh initialization command to NuShell environment
-$nuEnvPath = "$Home\AppData\Roaming\nushell\env.nu"
-$nuConfigPath = "$Home\AppData\Roaming\nushell\config.nu"
-$ohMyPoshCommand = 'let-env PROMPT_COMMAND = (oh-my-posh init nu --config "$HOME/AppData/Local/Programs/oh-my-posh/themes/spaceship.omp.json")'
+# Configure NuShell
+$nuConfigDir = "$HOME\AppData\Roaming\nushell"
+$nuEnvPath = "$nuConfigDir\env.nu"
+$nuConfigPath = "$nuConfigDir\config.nu"
 
-if (Test-Path -Path $nuEnvPath) {
+# Create NuShell config directory if it doesn't exist
+if (-not (Test-Path $nuConfigDir)) {
+    New-Item -Path $nuConfigDir -ItemType Directory -Force
+}
+
+# Create or update env.nu
+if (-not (Test-Path $nuEnvPath)) {
+    New-Item -Path $nuEnvPath -ItemType File -Force
+}
+
+# Check if Oh My Posh initialization is already in env.nu before adding it
+$ohMyPoshCommand = 'let-env PROMPT_COMMAND = { oh-my-posh init nu --config "$env.HOME/AppData/Local/Programs/oh-my-posh/themes/spaceship.omp.json" }'
+if (-not (Select-String -Path $nuEnvPath -Pattern "oh-my-posh init nu" -Quiet)) {
     Add-Content -Path $nuEnvPath -Value "`n$ohMyPoshCommand"
-    Write-Host "oh-my-posh initialization command added to NuShell env.nu" -ForegroundColor Green
-} else {
-    Write-Error "NuShell environment file not found at $nuEnvPath. Please ensure NuShell is installed and the path is correct or update accordingly."
+    Write-Host "Added Oh My Posh to NuShell env.nu" -ForegroundColor Green
 }
 
-# Add additional commands to NuShell config
-$nuAdditionalCommands = @(
-    'source ~/.oh-my-posh.nu',
+# Create or update config.nu
+if (-not (Test-Path $nuConfigPath)) {
+    New-Item -Path $nuConfigPath -ItemType File -Force
+}
+
+# Add NuShell customizations if not already present
+$nuCustomizations = @(
     '$env.EDITOR = "nvim"',
-    'use ~/Documents/Sampong_dotfile/nu/main_profile.nu',
-    'use main_profile *'
+    'use ~/Documents/Sampong_dotfile/nu/main_profile.nu'
 )
 
-if (Test-Path -Path $nuConfigPath) {
-    Add-Content -Path $nuConfigPath -Value ($nuAdditionalCommands -join "`n")
-    Write-Host "Update configuration file for Nu Shell in config.nu" -ForegroundColor Green
-} else {
-    Write-Error "NuShell configuration file not found at $nuConfigPath. Please ensure NuShell is installed and the path is correct or update accordingly."
+foreach ($line in $nuCustomizations) {
+    if (-not (Select-String -Path $nuConfigPath -Pattern ([regex]::Escape($line)) -Quiet)) {
+        Add-Content -Path $nuConfigPath -Value $line
+    }
 }
+Write-Host "NuShell configuration updated" -ForegroundColor Green
 
-# Create PowerShell profile file if it doesn't exist
+# Configure PowerShell
 if (-not (Test-Path $PROFILE.CurrentUserAllHosts)) {
-    New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
+    New-Item -Path $PROFILE.CurrentUserAllHosts -ItemType File -Force
 }
 
-# Add oh-my-posh import command to PowerShell profile
-$poshProfileCommand = 'Import-Module (Resolve-Path "~\Documents\Sampong_dotfile\PowerShell\posh_profile.ps1")'
-Add-Content -Path $PROFILE.CurrentUserAllHosts -Value "`n$poshProfileCommand"
+$poshProfileImport = 'Import-Module (Resolve-Path "~\Documents\Sampong_dotfile\PowerShell\posh_profile.ps1")'
+if (-not (Select-String -Path $PROFILE.CurrentUserAllHosts -Pattern ([regex]::Escape($poshProfileImport)) -Quiet)) {
+    Add-Content -Path $PROFILE.CurrentUserAllHosts -Value "`n$poshProfileImport"
+    Write-Host "PowerShell profile updated" -ForegroundColor Green
+}
 
-# Create ~/.bashrc file and add commands
-$bashrcPath = "$HOME/.bashrc"
-$bashrcCommands = @(
-	'export DIR="$HOME/Documents/Sampong_dotfile/bash"'
-	'if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi'
-	'. "$DIR/main.sh"'
+# Configure Bash
+$bashrcPath = "$HOME\.bashrc"
+$bashContent = @(
+    'export DIR="$HOME/Documents/Sampong_dotfile/bash"',
+    'if [[ ! -d "$DIR" ]]; then mkdir -p "$DIR"; fi',
+    'source "$DIR/main.sh"'
 )
+
 if (-not (Test-Path $bashrcPath)) {
     New-Item -Path $bashrcPath -ItemType File -Force
 }
-Add-Content -Path $bashrcPath -Value ($bashrcCommands -join "`n")
+
+# Check if bash config is already present
+$bashContentString = $bashContent -join "`n"
+if (-not (Select-String -Path $bashrcPath -Pattern "Sampong_dotfile/bash" -Quiet)) {
+    Add-Content -Path $bashrcPath -Value "`n$bashContentString"
+    Write-Host "Bash profile updated" -ForegroundColor Green
+}
+
 
 ########################################################################
 #                    End Shell configuration script                    #
 ########################################################################
 
-# Pause to let the user check the results
-Write-Host "Press Enter to continue..."
-$input = Read-Host
+Write-Host "Setup complete! Your development environment has been configured." -ForegroundColor Green
+Write-Host "Press Enter to exit..."
+Read-Host
