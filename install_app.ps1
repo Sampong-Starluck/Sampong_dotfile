@@ -63,6 +63,12 @@ foreach ($app in $apps) {
     }
 }
 
+########################################################################
+#                        Shell configuration script                    #
+#**********************************************************************#
+#                      Commend this part if not needed                 #
+########################################################################
+
 # Create dotfiles directory if it doesn't exist
 $dotfilesDir = "$HOME\Documents\Sampong_dotfile"
 if (-not (Test-Path $dotfilesDir)) {
@@ -79,12 +85,6 @@ if (-not (Test-Path $dotfilesDir)) {
     Set-Content -Path "$dotfilesDir\PowerShell\posh_profile.ps1" -Value '# Your PowerShell customizations go here'
     Set-Content -Path "$dotfilesDir\bash\main.sh" -Value '# Your Bash customizations go here'
 }
-
-########################################################################
-#                        Shell configuration script                    #
-#**********************************************************************#
-#                      Commend this part if not needed                 #
-########################################################################
 
 # Configure NuShell
 $nuConfigDir = "$HOME\AppData\Roaming\nushell"
