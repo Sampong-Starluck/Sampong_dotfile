@@ -13,7 +13,11 @@ export def gpull [branch?: string] {
 
 # Git log with optional formatting
 export def glog [--decorative(-d)] {
-    git log ($decorative | if $in { "--graph --oneline --decorate" } else { "" })
+    if $decorative {
+        git log --graph --oneline --decorate
+    } else {
+        git log
+    }
 }
 
 # Git commands with sensible defaults
