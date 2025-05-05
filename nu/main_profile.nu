@@ -1,11 +1,10 @@
+# Streamlined Nushell functions
+
 # List files in current directory
 export def ll [] { ls | where type == 'File' }
 
 # Change to GitHub directory
-export def g [] { 
-    # Use the full path to ensure compatibility
-    cd ~/Documents/Github
-}
+export def g [] { cd ~/Documents/Github }
 
 # Git pull with smart origin handling
 export def gpull [branch?: string] {
@@ -13,52 +12,32 @@ export def gpull [branch?: string] {
 }
 
 # Git log with optional formatting
-export def glog [decorative: bool = false] {
-    if $decorative {
-        git log --graph --oneline --decorate
-    } else {
-        git log
-    }
+export def glog [--decorative(-d)] {
+    git log ($decorative | if $in { "--graph --oneline --decorate" } else { "" })
 }
 
 # Git commands with sensible defaults
-export def gcom [message: string] { 
-    git add .
-    git commit -m $message 
-}
-
-export def gamend [] { 
-    git add .
-    git commit --amend --no-edit 
-}
-
+export def gcom [message: string] { git add . | git commit -m $message }
+export def gamend [] { git add . | git commit --amend --no-edit }
 export def gstat [] { git status }
 
 # Smart git checkout with validation
 export def gcheck [branch?: string] {
     if ($branch | is-empty) { 
-        echo "Error: Branch name required"
-        return
-    } 
-    
-    git checkout $branch
+        error make --unspanned { msg: "Error: Branch name required" } 
+    } else { 
+        git checkout $branch 
+    }
 }
 
 # Combined lazy git workflows
 export def lazygit [
     message?: string,
-    amend: bool = false,
-    branch: string = "",
-    no_pull: bool = false,
-    no_push: bool = false
+    --amend(-a),
+    --branch(-b): string = "development",
+    --no-pull(-n),
+    --no-push(-p)
 ] {
-    # Get current branch if none specified
-    let br = if ($branch | is-empty) { 
-        git branch --show-current
-    } else {
-        $branch
-    }
-    
     # Add changes
     git add .
     
@@ -68,12 +47,12 @@ export def lazygit [
     } else if (not ($message | is-empty)) {
         git commit -m $message
     } else if (not $amend) {
-        echo "Error: Commit message required when not amending"
+        error make --unspanned { msg: "Error: Commit message required when not amending" }
         return
     }
     
     # Pull changes (if not disabled)
-    if (not $no_pull) { git pull origin $br }
+    if (not $no_pull) { git pull origin $branch }
     
     # Push changes (if not disabled)
     if (not $no_push) { git push }
@@ -84,16 +63,17 @@ export def get-pubip [] {
     curl --silent http://ifconfig.me/ip | str trim
 }
 
-# Load Oh My Posh theme
+# Load Oh My Posh theme with validation
 export def load_theme [theme: string = "catppuccin_frappe"] {
     let theme_path = $"($env.POSH_THEMES_PATH)/($theme).omp.json"
     
     if (not ($theme_path | path exists)) {
-        echo $"Theme not found: ($theme)"
+        error make --unspanned { msg: $"Theme not found: ($theme)" }
         return
     }
     
-    oh-my-posh init nu --config $theme_path
+    oh-my-posh init nu --config $theme_path | save --force ~/.oh-my-posh.nu
+    source ~/.oh-my-posh.nu
 }
 
 # Startup configuration
@@ -109,12 +89,6 @@ export def startup [] {
         }
     }
     
-    # Set editor with priority: nvim > vim > code
-    $env.config.buffer_editor = if (which nvim | length) > 0 {
-        "nvim"
-    } else if (which vim | length) > 0 {
-        "vim"
-    } else {
-        "code"
-    }
+    # Set editor with smart fallback
+    $env.config.buffer_editor = if (which vim | length) > 0 { "vim" } else { "code" }
 }
