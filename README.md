@@ -9,8 +9,8 @@ Easily restore your preferred shell environments and configurations after resett
 Before using these dotfiles, please install:
 
 ### Shell Prompt & Enhancements
-- Oh My Posh: https://ohmyposh.dev/ — beautiful, customizable shell prompts
-- Clink: https://github.com/chrisant996/clink — enhances Windows CMD
+- [Oh My Posh](https://ohmyposh.dev) — beautiful, customizable shell prompts
+- [Clink](https://github.com/chrisant996/clink) — enhances Windows CMD
 
 ### Text Editors
 - [Vim](https://www.vim.org/)
