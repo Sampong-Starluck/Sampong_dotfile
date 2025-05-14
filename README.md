@@ -158,6 +158,6 @@ WARNING: The script may have side effects. For full control, use manual installa
 ## Credits
 
 Inspired by and adapted from:
-- Chris Titus Tech's PowerShell Profile: https://github.com/ChrisTitusTech/powershell-profile
-- Tim Sneath's PowerShell Gist: https://gist.github.com/timsneath/19867b12eee7fd5af2ba
+- [Chris Titus Tech's PowerShell Profile](https://github.com/ChrisTitusTech/powershell-profile)
+- [Tim Sneath's PowerShell Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)
 
