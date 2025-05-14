@@ -14,13 +14,32 @@
 #==== 1) Load JSON catalogs ====#
 
 # Path to apps.json
-$appJson = Join-Path $PSScriptRoot './json/apps.json'
-$appCatalog = (Get-Content $appJson -Raw | ConvertFrom-Json).apps
+$appJson = Join-Path $PSScriptRoot 'json/apps.json'
+if (Test-Path $appJson) {
+    $appCatalog = (Get-Content $appJson -Raw | ConvertFrom-Json).apps
+    foreach ($app in $appCatalog) {
+        Write-Host "Name: $($app.name), Version: $($app.version)"
+    }
+} else {
+    Write-Error "File not found: $appJson"
+}
+
 
 # Path to shells.json
-$shellJson = Join-Path $PSScriptRoot './json/shells.json'
-$shellAll = (Get-Content $shellJson -Raw | ConvertFrom-Json).shells
-$shellCatalog = $shellAll | Where-Object { -not $_.hidden }
+$shellJson = Join-Path $PSScriptRoot 'json/shells.json'
+
+if (Test-Path $shellJson) {
+    $shellAll = (Get-Content $shellJson -Raw | ConvertFrom-Json).shells
+    $shellCatalog = $shellAll | Where-Object { -not $_.hidden }
+
+    # Example: Output visible shells
+    foreach ($shell in $shellCatalog) {
+        Write-Host "Shell: $($shell.name)"
+    }
+} else {
+    Write-Error "File not found: $shellJson"
+}
+
 
 
 #==== 2) Helper: Interactive checkbox list ====#
