@@ -51,7 +51,7 @@ Before using these dotfiles, please install:
 ```powershell
 iwr -UseBasicParsing https://raw.githubusercontent.com/Sampong-Starluck/Sampong_dotfile/master/install.ps1 | iex
 ```
-**Note**: This method is not working currently.
+**Note**: This method is not working currently. Recommence Method 2 & 3
 
 ---
 
