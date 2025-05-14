@@ -14,11 +14,11 @@
 #==== 1) Load JSON catalogs ====#
 
 # Path to apps.json
-$appJson = Join-Path $PSScriptRoot 'apps.json'
+$appJson = Join-Path $PSScriptRoot './json/apps.json'
 $appCatalog = (Get-Content $appJson -Raw | ConvertFrom-Json).apps
 
 # Path to shells.json
-$shellJson = Join-Path $PSScriptRoot 'shells.json'
+$shellJson = Join-Path $PSScriptRoot './json/shells.json'
 $shellAll = (Get-Content $shellJson -Raw | ConvertFrom-Json).shells
 $shellCatalog = $shellAll | Where-Object { -not $_.hidden }
 
@@ -272,10 +272,22 @@ do {
         }
 
         '2' {
-            # Select apps
-            $toInstall = Show-CheckboxList -Items $appCatalog -Prompt 'Select apps to install: Up/Down, Space, Enter'
+            # Create a Back option using Select-Object
+            $appBackOption = New-Object PSObject
+            $appBackOption | Add-Member -MemberType NoteProperty -Name "id" -Value "back"
+            $appBackOption | Add-Member -MemberType NoteProperty -Name "name" -Value "-- Back to Main Menu --"
+            $appBackOption | Add-Member -MemberType NoteProperty -Name "function" -Value ""
 
-            if ($toInstall.Count -eq 0) {
+            # Add it to the shell list
+            $appListWithBreak = @($appBackOption) + $appCatalog
+            # Select apps
+            $toInstall = Show-CheckboxList -Items $appListWithBreak -Prompt 'Select apps to install: Up/Down, Space, Enter'
+
+            if ($toInstall.id -contains "back") {
+                Write-Host "Returning to main menu..." -ForegroundColor Cyan
+                Pause
+            }
+            elseif ($toInstall.Count -eq 0) {
                 Write-Host 'No apps selected.' -ForegroundColor Red
                 Pause
             }

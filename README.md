@@ -46,7 +46,21 @@ Before using these dotfiles, please install:
 
 ## Installation
 
-### Option 1: Automated Script
+### Option 1: Invoke web request:
+
+```powershell
+iwr -UseBasicParsing https://raw.githubusercontent.com/Sampong-Starluck/Sampong_dotfile/master/install.ps1 | iex
+```
+**Note**: This method is not working currently.
+
+---
+
+### Option 2: Automated Script
+Clone this repo:
+   ```powershell
+   git clone https://github.com/Sampong-Starluck/Sampong_dotfile.git
+   ```
+
 Run the main installer:
    ```powershell
     ./install.ps1
@@ -63,7 +77,7 @@ WARNING: The script may have side effects. For full control, use manual installa
 
 ---
 
-### Option 2: Manual Setup
+### Option 3: Manual Setup
 
 #### PowerShell
 
