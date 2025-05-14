@@ -1,0 +1,34 @@
+{
+  "shells": [
+    {
+      "id": "all",
+      "name": "All Shells",
+      "hidden": false,
+      "function": ""
+    },
+    {
+      "id": "nushell",
+      "name": "NuShell",
+      "hidden": false,
+      "function": "Set-Nu"
+    },
+    {
+      "id": "bash",
+      "name": "Bash",
+      "hidden": false,
+      "function": "Set-Bash"
+    },
+    {
+      "id": "powershell",
+      "name": "PowerShell 7",
+      "hidden": false,
+      "function": "Set-Posh"
+    },
+    {
+      "id": "fish",
+      "name": "Fish Shell",
+      "hidden": true,
+      "function": "Set-Fish"
+    }
+  ]
+}

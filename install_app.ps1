@@ -1,20 +1,3 @@
-# This script will install the following apps using winget:
-# - Visual Studio Code
-# - Arc browser
-# - Zen browser
-# - Firefox aurora
-# - Notepad++
-# - PowerShell
-# - Tabby terminal
-# - OBSStudio
-# - JetBrains Toolbox
-# - Nushell
-# - Telegram/Unigram
-# - Version-fox(vfox)
-# - Nilesoft
-# - Google Chrome
-
-
 # Define apps to install
 $apps = @(
     "JetBrains.Toolbox",
@@ -36,15 +19,15 @@ $apps = @(
 # Check and install winget if needed
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     Write-Host "Installing winget..." -ForegroundColor Yellow
-    
+
     # More reliable installation method
     $progressPreference = 'silentlyContinue'
     $latestWingetMsixBundleUri = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
     $appInstallerPath = "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-    
+
     Invoke-WebRequest -Uri $latestWingetMsixBundleUri -OutFile $appInstallerPath
     Add-AppxPackage -Path $appInstallerPath
-    
+
     if (Get-Command winget -ErrorAction SilentlyContinue) {
         Write-Host "winget successfully installed." -ForegroundColor Green
     } else {
@@ -74,12 +57,12 @@ $dotfilesDir = "$HOME\Documents\Sampong_dotfile"
 if (-not (Test-Path $dotfilesDir)) {
     Write-Host "Creating dotfiles directory at $dotfilesDir" -ForegroundColor Yellow
     New-Item -Path $dotfilesDir -ItemType Directory -Force
-    
+
     # Create subdirectories for different shell configs
     New-Item -Path "$dotfilesDir\nu" -ItemType Directory -Force
     New-Item -Path "$dotfilesDir\PowerShell" -ItemType Directory -Force
     New-Item -Path "$dotfilesDir\bash" -ItemType Directory -Force
-    
+
     # Create placeholder files with basic content
     Set-Content -Path "$dotfilesDir\nu\main_profile.nu" -Value '# Your NuShell customizations go here'
     Set-Content -Path "$dotfilesDir\PowerShell\posh_profile.ps1" -Value '# Your PowerShell customizations go here'
@@ -101,11 +84,76 @@ if (-not (Test-Path $nuEnvPath)) {
     New-Item -Path $nuEnvPath -ItemType File -Force
 }
 
+# Find the correct Oh My Posh theme path
+# Check common installation locations
+$potentialThemePaths = @(
+    "$env:LOCALAPPDATA\Programs\oh-my-posh\themes\spaceship.omp.json",
+    "$env:PROGRAMFILES\oh-my-posh\themes\spaceship.omp.json",
+    "$HOME\AppData\Local\Programs\oh-my-posh\themes\spaceship.omp.json"
+)
+
+$themeFound = $false
+$themePath = ""
+
+foreach ($path in $potentialThemePaths) {
+    if (Test-Path $path) {
+        $themePath = $path
+        $themeFound = $true
+        Write-Host "Found Oh My Posh theme at: $themePath" -ForegroundColor Green
+        break
+    }
+}
+
+# If theme not found, try to locate Oh My Posh installation and find themes directory
+if (-not $themeFound) {
+    $ohMyPoshExe = Get-Command -Name "oh-my-posh" -ErrorAction SilentlyContinue
+    if ($ohMyPoshExe) {
+        $ohMyPoshDir = Split-Path -Parent $ohMyPoshExe.Source
+        $potentialThemeDir = Join-Path -Path $ohMyPoshDir -ChildPath "themes"
+
+        if (Test-Path $potentialThemeDir) {
+            $themePath = Join-Path -Path $potentialThemeDir -ChildPath "spaceship.omp.json"
+            $themeFound = Test-Path $themePath
+
+            if ($themeFound) {
+                Write-Host "Found Oh My Posh theme at: $themePath" -ForegroundColor Green
+            }
+        }
+    }
+}
+
+# Use fallback theme if preferred theme not found
+if (-not $themeFound) {
+    foreach ($path in $potentialThemePaths) {
+        $themeDir = Split-Path -Parent $path
+        if (Test-Path $themeDir) {
+            # Get the first theme file we can find
+            $anyTheme = Get-ChildItem -Path $themeDir -Filter "*.omp.json" | Select-Object -First 1
+            if ($anyTheme) {
+                $themePath = $anyTheme.FullName
+                $themeFound = $true
+                Write-Host "Preferred theme not found. Using alternative theme: $themePath" -ForegroundColor Yellow
+                break
+            }
+        }
+    }
+}
+
 # Check if Oh My Posh initialization is already in env.nu before adding it
-$ohMyPoshCommand = 'let-env PROMPT_COMMAND = { oh-my-posh init nu --config "$env.HOME/AppData/Local/Programs/oh-my-posh/themes/spaceship.omp.json" }'
-if (-not (Select-String -Path $nuEnvPath -Pattern "oh-my-posh init nu" -Quiet)) {
+if ($themeFound) {
+    # Convert Windows path to format compatible with NuShell
+    $nuShellPath = $themePath -replace '\\', '\\'
+
+    $ohMyPoshCommand = "let-env PROMPT_COMMAND = { oh-my-posh init nu --config `"$nuShellPath`" }"
+
+    if (-not (Select-String -Path $nuEnvPath -Pattern "oh-my-posh init nu" -Quiet)) {
+        Add-Content -Path $nuEnvPath -Value "`n$ohMyPoshCommand"
+        Write-Host "Added Oh My Posh to NuShell env.nu" -ForegroundColor Green
+    }
+} else {
+    Write-Host "Oh My Posh theme not found. NuShell will use default prompt." -ForegroundColor Yellow
+    $ohMyPoshCommand = "# Oh My Posh theme not found. Using default prompt."
     Add-Content -Path $nuEnvPath -Value "`n$ohMyPoshCommand"
-    Write-Host "Added Oh My Posh to NuShell env.nu" -ForegroundColor Green
 }
 
 # Create or update config.nu
@@ -155,7 +203,6 @@ if (-not (Select-String -Path $bashrcPath -Pattern "Sampong_dotfile/bash" -Quiet
     Add-Content -Path $bashrcPath -Value "`n$bashContentString"
     Write-Host "Bash profile updated" -ForegroundColor Green
 }
-
 
 ########################################################################
 #                    End Shell configuration script                    #

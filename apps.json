@@ -1,0 +1,64 @@
+{
+  "apps": [
+    {
+      "name": "PowerShell 7",
+      "id":   "Microsoft.PowerShell"
+    },
+    {
+      "name": "JetBrains Toolbox",
+      "id": "JetBrains.Toolbox"
+    },
+    {
+      "name": "Firefox Developer Edition",
+      "id": "Mozilla.Firefox.DeveloperEdition"
+    },
+    {
+      "name": "version-fox",
+      "id": "version-fox.vfox"
+    },
+    {
+      "name": "Zen Browser",
+      "id": "Zen-Team.Zen-Browser"
+    },
+    {
+      "name": "Visual Studio Code",
+      "id": "Microsoft.VisualStudioCode"
+    },
+    {
+      "name": "Notepad++",
+      "id": "Notepad++.Notepad++"
+    },
+    {
+      "name": "Nilesoft Shell",
+      "id": "Nilesoft.Shell"
+    },
+    {
+      "name": "OBS Studio",
+      "id": "OBSProject.OBSStudio"
+    },
+    {
+      "name": "Arc Browser",
+      "id": "TheBrowserCompany.Arc"
+    },
+    {
+      "name": "Telegram Desktop",
+      "id": "Telegram.TelegramDesktop"
+    },
+    {
+      "name": "Tabby",
+      "id": "Eugeny.Tabby"
+    },
+    {
+      "name": "NuShell",
+      "id": "Nushell.Nushell"
+    },
+    {
+      "name": "Google Chrome",
+      "id": "Google.Chrome"
+    },
+    {
+      "name": "Oh My Posh",
+      "id": "JanDeDobbeleer.OhMyPosh"
+    }
+  ]
+}
