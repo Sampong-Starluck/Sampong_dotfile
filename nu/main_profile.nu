@@ -77,7 +77,7 @@ export def load_theme [theme: string = "catppuccin_frappe"] {
     }
     
     oh-my-posh init nu --config $theme_path | save --force ~/.oh-my-posh.nu
-    source ~/.oh-my-posh.nu
+    # source ~/.oh-my-posh.nu
 }
 
 # Startup configuration

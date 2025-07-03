@@ -18,7 +18,7 @@
     },
     {
       "name": "Zen Browser",
-      "id": "Zen-Team.Zen-Browser"
+      "id": "Zen-Team.Zen-Browser.Twilight"
     },
     {
       "name": "Visual Studio Code",
@@ -37,10 +37,6 @@
       "id": "OBSProject.OBSStudio"
     },
     {
-      "name": "Arc Browser",
-      "id": "TheBrowserCompany.Arc"
-    },
-    {
       "name": "Telegram Desktop",
       "id": "Telegram.TelegramDesktop"
     },
@@ -54,11 +50,19 @@
     },
     {
       "name": "Google Chrome",
-      "id": "Google.Chrome"
+      "id": "Google.Chrome.Dev"
     },
     {
       "name": "Oh My Posh",
       "id": "JanDeDobbeleer.OhMyPosh"
+    },
+    {
+      "name": "Zoom Workspace",
+      "id": "Zoom.Zoom"
+    },
+    {
+      "name": "Power Toys",
+      "id": "Microsoft.PowerToys"
     }
   ]
 }

@@ -165,8 +165,8 @@ function Set-Nu {
     Write-Host "Configuring NuShell..." -ForegroundColor Cyan
 
     # 1) Create ~/Documents/Sampong_dotfile/nu
-    $dotDir = Join-Path $HOME 'Documents\Sampong_dotfile'
-    $nuDir = Join-Path $dotDir 'nu'
+    $dotDir = Join-Path $HOME'\Documents\Sampong_dotfile'
+    $nuDir = Join-Path $dotDir'\nu'
     if (-not (Test-Path $nuDir)) {
         New-Item -Path $nuDir -ItemType Directory -Force | Out-Null
         '# NuShell main profile' | Set-Content (Join-Path $nuDir 'main_profile.nu')
@@ -174,22 +174,22 @@ function Set-Nu {
     }
 
     # 2) Create appdata nushell dir & files
-    $nuCfg = Join-Path $env:APPDATA 'nushell'
-    $envNu = Join-Path $nuCfg 'env.nu'
-    $confNu = Join-Path $nuCfg 'config.nu'
+    $nuCfg = Join-Path $env:APPDATA'\nushell'
+    $envNu = Join-Path $nuCfg'\env.nu'
+    $confNu = Join-Path $nuCfg'\config.nu'
     New-Item -Path $nuCfg -ItemType Directory -Force | Out-Null
     New-Item -Path $envNu,$confNu -ItemType File -Force | Out-Null
 
     # 3) Apply Oh-My-Posh theme if found
     $themePaths = @(
-        Join-Path $env:LOCALAPPDATA 'Programs\oh-my-posh\themes\spaceship.omp.json'
-        Join-Path $env:PROGRAMFILES 'oh-my-posh\themes\spaceship.omp.json'
+        Join-Path $env:LOCALAPPDATA'\Programs\oh-my-posh\themes\spaceship.omp.json'
+        Join-Path $env:PROGRAMFILES'\oh-my-posh\themes\spaceship.omp.json'
     )
     $theme = $themePaths | Where-Object { Test-Path $_ } | Select-Object -First 1
 
     if ($theme) {
         # build the line without any backtick-escape
-        $line = 'let-env PROMPT_COMMAND = { oh-my-posh init nu --config "' + $theme + '" }'
+        $line = 'oh-my-posh init nu --config "' + $theme + '" '
         if (-not (Select-String -Path $envNu -Pattern 'oh-my-posh init nu' -Quiet)) {
             Add-Content -Path $envNu -Value "`n$line"
             Write-Host '-> Applied Oh-My-Posh to NuShell.' -ForegroundColor Green
@@ -212,16 +212,16 @@ function Set-Nu {
 function Set-Bash {
     Write-Host "Configuring Bash..." -ForegroundColor Cyan
 
-    $dotDir = Join-Path $HOME 'Documents\Sampong_dotfile'
-    $bashDir = Join-Path $dotDir 'bash'
-    $mainSh = Join-Path $bashDir 'main.sh'
+    $dotDir = Join-Path $HOME'\Documents\Sampong_dotfile'
+    $bashDir = Join-Path $dotDir'\bash'
+    $mainSh = Join-Path $bashDir'\main.sh'
     if (-not (Test-Path $bashDir)) {
         New-Item $bashDir -ItemType Directory -Force | Out-Null
         '# Bash main script' | Set-Content $mainSh
         Write-Host '-> Created Bash dotfiles.' -ForegroundColor Green
     }
 
-    $bashrc = Join-Path $HOME '.bashrc'
+    $bashrc = Join-Path $HOME'\.bashrc'
     if (-not (Test-Path $bashrc)) {
         New-Item $bashrc -ItemType File -Force | Out-Null
     }
@@ -236,31 +236,59 @@ function Set-Bash {
 }
 
 function Set-Posh {
+    [CmdletBinding()]
+    param(
+        [ValidateSet('spaceship','paradox','jandedobbeleer')]
+        [string]$Theme = 'spaceship'
+    )
+
     Write-Host "Configuring PowerShell profile..." -ForegroundColor Cyan
 
-    $profilePath = $profile.CurrentUserAllHosts
-    $profileDir = Split-Path -Parent $profilePath
-    if (-not (Test-Path $profileDir)) {
-        New-Item $profileDir -ItemType Directory -Force | Out-Null
-    }
-    if (-not (Test-Path $profilePath)) {
-        New-Item $profilePath -ItemType File -Force | Out-Null
-    }
+    try {
+        # Determine profile path & directory
+        $profilePath = $PROFILE
+        $profileDir  = Split-Path -Path $profilePath -Parent
 
-    $lines = @(
-        'Import-Module oh-my-posh',
-        'Set-PoshPrompt -Theme spaceship',
-        'Import-Module PSReadLine',
-        'Set-PSReadLineOption -PredictionSource History'
-    )
-    foreach ($line in $lines) {
-        if (-not (Select-String -Path $profilePath -Pattern [regex]::Escape($line) -Quiet)) {
-            Add-Content -Path $profilePath -Value $line
+        # Create folder & file if missing
+        if (-not (Test-Path -Path $profileDir -PathType Container)) {
+            New-Item -Path $profileDir -ItemType Directory -Force | Out-Null
         }
+        if (-not (Test-Path -Path $profilePath -PathType Leaf)) {
+            New-Item -Path $profilePath -ItemType File -Force | Out-Null
+        }
+
+        # Optional: install modules if not already present
+        # if (-not (Get-Module -ListAvailable -Name oh-my-posh)) {
+        #     Install-Module oh-my-posh -Scope CurrentUser -Force
+        # }
+        # if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
+        #     Install-Module PSReadLine -Scope CurrentUser -Force
+        # }
+
+        # Lines to ensure in profile
+        $entries = @(
+            'Import-Module oh-my-posh',
+            "Set-PoshPrompt -Theme $Theme",
+            'Import-Module PSReadLine',
+            'Set-PSReadLineOption -PredictionSource History'
+        )
+
+        foreach ($entry in $entries) {
+            $escaped = [regex]::Escape($entry)
+            if (-not (Select-String -Path $profilePath -Pattern $escaped -Quiet)) {
+                # prepend newline so added entries stay on their own line
+                Add-Content -Path $profilePath -Value "`n$entry"
+            }
+        }
+
+        Write-Host "-> PowerShell profile updated at $profilePath" `
+                  -ForegroundColor Green
+    }
+    catch {
+        Write-Error "Failed to configure profile: $_"
     }
 
-    Write-Host "-> PowerShell profile updated at $profilePath" -ForegroundColor Green
-    Pause
+    Read-Host -Prompt "Press Enter to continue"
 }
 
 
