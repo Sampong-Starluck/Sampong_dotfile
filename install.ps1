@@ -40,8 +40,6 @@ if (Test-Path $shellJson) {
     Write-Error "File not found: $shellJson"
 }
 
-
-
 #==== 2) Helper: Interactive checkbox list ====#
 function Show-CheckboxList {
     [CmdletBinding()]
@@ -267,10 +265,9 @@ function Set-Posh {
 
         # Lines to ensure in profile
         $entries = @(
-            'Import-Module oh-my-posh',
-            "Set-PoshPrompt -Theme $Theme",
-            'Import-Module PSReadLine',
-            'Set-PSReadLineOption -PredictionSource History'
+            "Import-Module (Resolve-Path '~/Documents/Sampong_dotfile/PowerShell/posh_profile.ps1')",
+            'Import-Module -Name Microsoft.WinGet.CommandNotFound',
+            'Invoke-Expression "$(vfox activate pwsh)"'
         )
 
         foreach ($entry in $entries) {
@@ -290,7 +287,6 @@ function Set-Posh {
 
     Read-Host -Prompt "Press Enter to continue"
 }
-
 
 #==== 6) Menu display ====#
 function Show-Menu {
