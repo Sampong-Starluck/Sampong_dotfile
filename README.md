@@ -1,4 +1,4 @@
-# Sampong_dotfile: Windows Dev Environment Setup
+# Personal dotfile 
 
 This repository provides an **interactive PowerShell script** to help you quickly set up a Windows development environment. It works with standard Windows PowerShell and PowerShell 7+, and lets you install essential applications, configure popular shells, and manage your dotfiles—all from a single menu.
 
