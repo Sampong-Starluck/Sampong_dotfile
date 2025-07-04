@@ -1,163 +1,58 @@
-# Personal Dotfiles Repository
+# Sampong_dotfile: Windows Dev Environment Setup
 
-Easily restore your preferred shell environments and configurations after resetting or changing your PC or laptop.
+This repository provides an **interactive PowerShell script** to help you quickly set up a Windows development environment. It works with standard Windows PowerShell and PowerShell 7+, and lets you install essential applications, configure popular shells, and manage your dotfiles—all from a single menu.
 
----
+## Features
+
+- **Install winget** (if missing)
+- **Select and install apps** from a customizable `apps.json` catalog
+- **Configure shells** (PowerShell, Bash, NuShell) with your custom dotfiles
+- **All-in-one option** to run every step automatically
+- **Interactive menus** for easy selection
 
 ## Prerequisites
 
-Before using these dotfiles, please install:
+- **Windows PowerShell** (works with both Windows PowerShell 5.1 and PowerShell 7+)
+- Internet connection for downloads
 
-### Shell Prompt & Enhancements
-- [Oh My Posh](https://ohmyposh.dev) — beautiful, customizable shell prompts
-- [Clink](https://github.com/chrisant996/clink) — enhances Windows CMD
+## Usage
 
-### Text Editors
-- [Vim](https://www.vim.org/)
-- [Neovim](https://neovim.io/)
-- Notepad (basic editing for installation scripts)
-- [Notepad++](https://notepad-plus-plus.org/)
-- [Visual Studio Code](https://code.visualstudio.com/)
-
-### Command Prompt Enhancements
-- [Clink](https://github.com/chrisant996/clink) (for customizing CMD)
-
-### Version Management
-- [Version-fox (vfox)](https://github.com/version-fox/vfox)  
-  *(A unified tool for managing SDKs (Java, Node.js, etc.)*
-
----
-
-## Supported Shells
-
-- **PowerShell**: [PowerShell 7](https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.4)
-- **Command Prompt**: Enhanced with [Clink](https://github.com/chrisant996/clink)
-- **Bash**: [Git Bash](https://git-scm.com/), [Cygwin](https://cygwin.com/)
-- **NuShell**: [NuShell](https://www.nushell.sh/)
-
----
-
-## Recommended Terminal Emulators
-
-- [Tabby Terminal](https://tabby.sh/)
-- [Windows Terminal](https://github.com/microsoft/terminal)
-
----
-
-## Installation
-
-### Option 1: Invoke web request:
-
-```powershell
-irm https://raw.githubusercontent.com/Sampong-Starluck/Sampong_dotfile/master/install_app.ps1 | invoke-expression 
-```
-**Note**: This method is not working currently. Recommence Method 2 & 3
-
----
-
-### Option 2: Automated Script
-Clone this repo:
+1. **Clone this repository**  
    ```powershell
-   git clone https://github.com/Sampong-Starluck/Sampong_dotfile.git
+   git clone https://github.com/yourusername/Sampong_dotfile.git
+   cd Sampong_dotfile
    ```
 
-Run the main installer:
+2. **Run the installer**  
    ```powershell
-    ./install.ps1
+   .\install.ps1
    ```
 
-   If you encounter issues, try:
-   ```powershell
-   ./install_app.ps1
-   ```
+3. **Follow the interactive prompts**  
+   - Install winget if needed  
+   - Select apps to install  
+   - Choose which shells to configure
 
-   Note: You may need to adjust file paths in install_app.ps1 for your system.
+## Customization
 
-WARNING: The script may have side effects. For full control, use manual installation.
+- **apps.json**: Edit `json/apps.json` to add or remove applications.
+- **shells.json**: Edit `json/shells.json` to control which shells are available for configuration.
+- **Dotfiles**: Place your custom shell configs in the `Sampong_dotfile` subfolders (e.g., `PowerShell/`, `bash/`, `nu/`).
+
+## What Gets Configured
+
+- **PowerShell**: Adds imports and customizations to your `$PROFILE`
+- **Bash**: Sources your custom `main.sh` from `.bashrc`
+- **NuShell**: Sets up config and env files, applies Oh-My-Posh theme if available
+
+## Notes
+
+- The script does **not** install PowerShell modules by default, but you can enable this in the code.
+- All changes are made to your user profile directories (safe for multi-user systems).
+- You can always re-run the script to update or reconfigure.
 
 ---
 
-### Option 3: Manual Setup
-
-#### PowerShell
-
-1. Allow script execution:
-   ```powershell
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-   ```
-
-2. Create your profile if it doesn't exist:
-   ```powershell
-    New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
-   ```
-
-3. Edit your profile:
-   ```powershell
-   notepad $PROFILE
-   ```
-
-4. Add this line (adjust the path as needed):
-   ```powershell
-   Import-Module (Resolve-Path '<path-to>/PowerShell/posh_profile.ps1')
-   ```
-5. Restart your terminal.
-
----
-
-#### CMD (Clink)
-
-1. Install Oh My Posh: https://ohmyposh.dev/docs/installation/prompt
-2. Follow the Oh My Posh Clink guide: https://ohmyposh.dev/docs/installation/clink
-3. Customize your prompt as desired.
-
----
-
-#### Bash (Git Bash, Cygwin)
-
-1. Edit or create your .bashrc:
-   ```shell
-   vim ~/.bashrc
-   ```
-
-2. Add:
-   ```shell
-   export DIR="<path>/bash"
-      if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
-      . "$DIR/main.sh"
-   ```
----
-
-#### NuShell
-
-1. Edit your Nu environment file:
-   ```shell
-   open $nu.env-path | edit
-   ```
-   Add:
-      ```shell
-      oh-my-posh init nu --config "~/AppData/Local/Programs/oh-my-posh/themes/spaceship.omp.json"
-      ```
-
-2. Edit your Nu config file:
-   ```shell
-   open $nu.config-path | edit
-   ```
-
-   Add:
-   ```shell
-   source ~/.oh-my-posh.nu
-   let-env EDITOR = "code"
-   use ~/Documents/Sampong_dotfile/nu/main_profile.nu
-   use main_profile *
-   ```
-
-3. Save and restart NuShell.
-
----
-
-## Credits
-
-Inspired by and adapted from:
-- [Chris Titus Tech's PowerShell Profile](https://github.com/ChrisTitusTech/powershell-profile)
-- [Tim Sneath's PowerShell Gist](https://gist.github.com/timsneath/19867b12eee7fd5af2ba)
+**Questions or issues?**  
+Open an issue or
 
