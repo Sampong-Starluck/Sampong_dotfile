@@ -1,68 +1,111 @@
-{
-  "apps": [
-    {
-      "name": "PowerShell 7",
-      "id":   "Microsoft.PowerShell"
-    },
-    {
-      "name": "JetBrains Toolbox",
-      "id": "JetBrains.Toolbox"
-    },
-    {
-      "name": "Firefox Developer Edition",
-      "id": "Mozilla.Firefox.DeveloperEdition"
-    },
-    {
-      "name": "version-fox",
-      "id": "version-fox.vfox"
-    },
-    {
-      "name": "Zen Browser",
-      "id": "Zen-Team.Zen-Browser.Twilight"
-    },
-    {
-      "name": "Visual Studio Code",
-      "id": "Microsoft.VisualStudioCode"
-    },
-    {
-      "name": "Notepad++",
-      "id": "Notepad++.Notepad++"
-    },
-    {
-      "name": "Nilesoft Shell",
-      "id": "Nilesoft.Shell"
-    },
-    {
-      "name": "OBS Studio",
-      "id": "OBSProject.OBSStudio"
-    },
-    {
-      "name": "Telegram Desktop",
-      "id": "Telegram.TelegramDesktop"
-    },
-    {
-      "name": "Tabby",
-      "id": "Eugeny.Tabby"
-    },
-    {
-      "name": "NuShell",
-      "id": "Nushell.Nushell"
-    },
-    {
-      "name": "Google Chrome",
-      "id": "Google.Chrome.Dev"
-    },
-    {
-      "name": "Oh My Posh",
-      "id": "JanDeDobbeleer.OhMyPosh"
-    },
-    {
-      "name": "Zoom Workspace",
-      "id": "Zoom.Zoom"
-    },
-    {
-      "name": "Power Toys",
-      "id": "Microsoft.PowerToys"
-    }
-  ]
-}
+[
+  {
+    "section": "Terminal and Shells",
+    "apps": [
+      {
+        "name": "PowerShell 7",
+        "id": "Microsoft.PowerShell"
+      },
+      {
+        "name": "NuShell",
+        "id": "Nushell.Nushell"
+      },
+      {
+        "name": "Nilesoft Shell",
+        "id": "Nilesoft.Shell"
+      },
+      {
+        "name": "Tabby terminal",
+        "id": "Eugeny.Tabby"
+      },
+      {
+        "name": "Git Shell and version control",
+        "id": "Git.Git"
+      },
+      {
+        "name": "Oh My Posh",
+        "id": "JanDeDobbeleer.OhMyPosh"
+      }
+    ]
+  },
+  {
+    "section": "Browsers",
+    "apps": [
+      {
+        "name": "Firefox Developer Edition",
+        "id": "Mozilla.Firefox.DeveloperEdition"
+      },
+      {
+        "name": "Zen Browser",
+        "id": "Zen-Team.Zen-Browser.Twilight"
+      },
+      {
+        "name": "Google Chrome",
+        "id": "Google.Chrome.Dev"
+      },
+      {
+        "name": "Vivaldi",
+        "id": "Vivaldi.Vivaldi"
+      }
+    ]
+  },
+  {
+    "section": "Text Editor",
+    "apps": [
+      {
+        "name": "Visual Studio Code",
+        "id": "Microsoft.VisualStudioCode"
+      },
+      {
+        "name": "Notepad++",
+        "id": "Notepad++.Notepad++"
+      },
+      {
+        "name": "Helix",
+        "id": "Helix.Helix"
+      },
+      {
+        "name": "Helix",
+        "id": "Helix.Helix"
+      },
+      {
+        "name": "Neovim",
+        "id": "Neovim.Neovim"
+      }
+    ]
+  },
+  {
+    "section": "Application",
+    "apps": [
+      {
+        "name": "Telegram Desktop",
+        "id": "Telegram.TelegramDesktop"
+      },
+      {
+        "name": "OBS Studio",
+        "id": "OBSProject.OBSStudio"
+      },
+      {
+        "name": "JetBrains Toolbox",
+        "id": "JetBrains.Toolbox"
+      },
+      {
+        "name": "Zoom Workspace",
+        "id": "Zoom.Zoom"
+      },
+      {
+        "name": "PowerToys",
+        "id": "Microsoft.PowerToys"
+      }
+    ]
+  },
+  {
+    "section": "SDK management",
+    "apps": [
+      {
+        "name": "Version fox",
+        "id": "version-fox.vfox"
+      }
+    ]
+  }
+]

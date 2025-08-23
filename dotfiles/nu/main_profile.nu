@@ -11,12 +11,12 @@ export def gpull [branch?: string] {
     git pull origin ($branch | default (git branch --show-current))
 }
 
-# Git log with optional formatting
-export def glog [--decorative(-d)] {
+# Git msg with optional formatting
+export def gmsg [--decorative(-d)] {
     if $decorative {
-        git log --graph --oneline --decorate
+        git msg --graph --oneline --decorate
     } else {
-        git log
+        git msg
     }
 }
 
@@ -83,15 +83,15 @@ export def load_theme [theme: string = "catppuccin_frappe"] {
 # Startup configuration
 export def startup [] {
     # Configure settings in one go
-    $env.config = {
-        show_banner: false
-        history: {
-            file_format: sqlite
-            max_size: 1_000_000
-            sync_on_enter: true
-            isolation: true
-        }
+    $env.config.history = {
+        file_format: sqlite
+        max_size: 1_000_000
+        sync_on_enter: true
+        isolation: true
     }
+    
+    # Disable banner
+    $env.config.show_banner = false
     
     # Set editor with smart fallback
     $env.config.buffer_editor = if (which vim | length) > 0 { "vim" } else { "code" }

@@ -16,14 +16,37 @@
 # Path to apps.json
 $appJson = Join-Path $PSScriptRoot 'json/apps.json'
 if (Test-Path $appJson) {
-    $appCatalog = (Get-Content $appJson -Raw | ConvertFrom-Json).apps
-    foreach ($app in $appCatalog) {
-        Write-Host "Name: $($app.name), Version: $($app.version)"
+    $appSections = Get-Content $appJson -Raw | ConvertFrom-Json
+
+    $appCatalog = @()
+    foreach ($section in $appSections) {
+        # Add "Select All" option for this section
+        $appCatalog += [PSCustomObject]@{
+            section = $section.section
+            name    = "-- All in $($section.section) --"
+            id      = "section-all-$($section.section)"
+        }
+
+        # Add real apps
+        foreach ($app in $section.apps) {
+            $appCatalog += [PSCustomObject]@{
+                section = $section.section
+                name    = $app.name
+                id      = $app.id
+            }
+        }
+    }
+
+    # Example: Output grouped apps
+    foreach ($section in $appSections) {
+        Write-Host "=== $($section.section) ===" -ForegroundColor Cyan
+        foreach ($app in $section.apps) {
+            Write-Host "  - $($app.name)"
+        }
     }
 } else {
     Write-Error "File not found: $appJson"
 }
-
 
 # Path to shells.json
 $shellJson = Join-Path $PSScriptRoot 'json/shells.json'
@@ -44,7 +67,7 @@ if (Test-Path $shellJson) {
 function Show-CheckboxList {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [psobject[]]$Items,
         [string]$Prompt = 'Up/Down to move, Space to toggle, Enter to confirm'
     )
@@ -59,10 +82,18 @@ function Show-CheckboxList {
         Clear-Host
         Write-Host $Prompt -ForegroundColor Cyan
 
-        # Draw each item
+        $currentSection = $null
         for ($i = 0; $i -lt $count; $i++) {
+            $item = $Items[$i]
+
+            # Print section header if new
+            if ($item.section -and $item.section -ne $currentSection) {
+                $currentSection = $item.section
+                Write-Host "`n=== $currentSection ===" -ForegroundColor Magenta
+            }
+
             $box = if ($selected[$i]) { '[x]' } else { '[ ]' }
-            $label = $Items[$i].name
+            $label = $item.name
             if ($i -eq $pos) {
                 Write-Host " > $box $label" -ForegroundColor Yellow
             }
@@ -74,17 +105,36 @@ function Show-CheckboxList {
         # Read a key
         $key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
         switch ($key.VirtualKeyCode) {
-            38 { $pos = ($pos - 1 + $count) % $count }  # Up
-            40 { $pos = ($pos + 1) % $count }           # Down
-            32 { $selected[$pos] = -not $selected[$pos] }# Space
-            13 { $done = $true }                        # Enter
+            38 { $pos = ($pos - 1 + $count) % $count }   # Up
+            40 { $pos = ($pos + 1) % $count }            # Down
+            32 {
+                $item = $Items[$pos]
+                if ($item.id -like "section-all-*") {
+                    # Toggle all apps in this section
+                    $sectionName = $item.section
+                    $toggleTo = -not $selected[$pos]
+                    for ($j = 0; $j -lt $count; $j++) {
+                        if ($Items[$j].section -eq $sectionName -and
+                            $Items[$j].id -notlike "section-all-*") {
+                            $selected[$j] = $toggleTo
+                        }
+                    }
+                    $selected[$pos] = $toggleTo
+                }
+                else {
+                    $selected[$pos] = -not $selected[$pos]
+                }
+            }
+            13 { $done = $true }                         # Enter
         }
     }
 
-    # Return only checked items
+    # Return only checked items (skip section toggles)
     $result = @()
     for ($i = 0; $i -lt $count; $i++) {
-        if ($selected[$i]) { $result += $Items[$i] }
+        if ($selected[$i] -and $Items[$i].id -notlike "section-all-*") {
+            $result += $Items[$i]
+        }
     }
     return $result
 }
@@ -125,7 +175,7 @@ function Install-Apps {
     $total = $AppsToInstall.Count
     if ($total -eq 0) { return }
 
-    Write-Host "Installing $total application(s)..." -ForegroundColor Cyan
+    Write-Host "-> [$($app.section)] $($app.name) ($percent%)" -ForegroundColor Cyan
 
     for ($i = 0; $i -lt $total; $i++) {
         $app = $AppsToInstall[$i]
@@ -315,16 +365,18 @@ do {
         }
 
         '2' {
-            # Create a Back option using Select-Object
-            $appBackOption = New-Object PSObject
-            $appBackOption | Add-Member -MemberType NoteProperty -Name "id" -Value "back"
-            $appBackOption | Add-Member -MemberType NoteProperty -Name "name" -Value "-- Back to Main Menu --"
-            $appBackOption | Add-Member -MemberType NoteProperty -Name "function" -Value ""
+            # Create a Back option
+            $appBackOption = [PSCustomObject]@{
+                id      = "back"
+                name    = "-- Back to Main Menu --"
+                section = ""
+            }
 
-            # Add it to the shell list
-            $appListWithBreak = @($appBackOption) + $appCatalog
+            # Add it to the app list
+            $appListWithBack = @($appBackOption) + $appCatalog
+
             # Select apps
-            $toInstall = Show-CheckboxList -Items $appListWithBreak -Prompt 'Select apps to install: Up/Down, Space, Enter'
+            $toInstall = Show-CheckboxList -Items $appListWithBack -Prompt 'Select apps to install: Up/Down, Space, Enter'
 
             if ($toInstall.id -contains "back") {
                 Write-Host "Returning to main menu..." -ForegroundColor Cyan
