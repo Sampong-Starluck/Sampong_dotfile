@@ -19,7 +19,7 @@ This repository provides an **interactive PowerShell script** to help you quickl
 
 1. **Clone this repository**  
    ```powershell
-   git clone https://github.com/yourusername/Sampong_dotfile.git
+   git clone https://github.com/Sampong-Starluck/Sampong_dotfile.git
    cd Sampong_dotfile
    ```
 
