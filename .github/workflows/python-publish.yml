@@ -61,4 +61,4 @@ jobs:
           dist/installer.exe
           source-code.zip
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
