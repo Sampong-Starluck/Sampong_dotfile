@@ -43,7 +43,14 @@ This repository provides an **interactive PowerShell script** to help you quickl
 
 - **PowerShell**: Adds imports and customizations to your `$PROFILE`
 - **Bash**: Sources your custom `main.sh` from `.bashrc`
-- **NuShell**: Sets up config and env files, applies Oh-My-Posh theme if available
+- **NuShell**: Sets up config and env files, applies Oh-My-Posh theme if available  
+  - **Note:** Nushell configuration (`$env.config`) must be set in `config.nu`.  
+    Make sure your `config.nu` contains:
+    ```nushell
+    use C:/Users/Sampong/AppData/Roaming/Sampong_dotfile/nu/main_profile.nu
+    main_profile startup
+    ```
+    This ensures your Nushell settings are applied correctly at startup.
 
 ## Notes
 
@@ -51,8 +58,4 @@ This repository provides an **interactive PowerShell script** to help you quickl
 - All changes are made to your user profile directories (safe for multi-user systems).
 - You can always re-run the script to update or reconfigure.
 
----
-
-**Questions or issues?**  
-Open an issue or
 
