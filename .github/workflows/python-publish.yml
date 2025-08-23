@@ -5,7 +5,7 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-name: Build Windows EXE
+name: Build Windows Installer
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
 
     - name: Build EXE with PyInstaller
       run: |
-        pyinstaller --onefile main.py --name SampongApp
+        pyinstaller --onefile main.py --name installer
       shell: pwsh
 
     - name: Zip source code
@@ -45,8 +45,8 @@ jobs:
     - name: Upload EXE artifact
       uses: actions/upload-artifact@v4
       with:
-        name: SampongApp-exe
-        path: dist/SampongApp.exe
+        name: installer-exe
+        path: dist/installer.exe
 
     - name: Upload Source Code artifact
       uses: actions/upload-artifact@v4
@@ -58,7 +58,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          dist/SampongApp.exe
+          dist/installer.exe
           source-code.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
