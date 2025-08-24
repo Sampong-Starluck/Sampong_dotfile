@@ -46,6 +46,14 @@
       {
         "name": "Vivaldi",
         "id": "Vivaldi.Vivaldi"
+      },
+      {
+        "name": "Chrommium",
+        "id": "Hibbiki.Chromium"
+      },
+      {
+        "name": "Librewolf",
+        "id": "LibreWolf.LibreWolf"
       }
     ]
   },
