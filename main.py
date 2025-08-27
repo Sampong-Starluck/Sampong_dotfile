@@ -129,7 +129,8 @@ def main():
                 install_winget()
 
             elif opt == "2":
-                apps = load_apps(online_mode=online_mode)
+                # apps = load_apps(online_mode=online_mode)
+                apps = load_apps()
                 selected = checkbox_menu(apps, "Select apps to install")
                 if selected:
                     install_apps(selected)
@@ -163,7 +164,8 @@ def main():
                 print("\n1. Installing winget...")
                 if install_winget():
                     print("\n2. Installing apps...")
-                    apps = load_apps(online_mode=online_mode)
+#                     apps = load_apps(online_mode=online_mode)
+                    apps = load_apps()
                     if apps:
                         install_apps([a for a in apps if not a.get("is_section_toggle")])
                 

@@ -54,6 +54,10 @@
       {
         "name": "Librewolf",
         "id": "LibreWolf.LibreWolf"
+      },
+      {
+        "name": "Brave",
+        "id": "Brave.Brave.Nightly"
       }
     ]
   },
