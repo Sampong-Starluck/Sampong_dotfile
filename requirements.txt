@@ -3,3 +3,4 @@ colorama
 pyyaml
 tqdm
 rich
+pyinstaller

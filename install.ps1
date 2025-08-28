@@ -115,7 +115,7 @@ function Show-CheckboxList {
                     $toggleTo = -not $selected[$pos]
                     for ($j = 0; $j -lt $count; $j++) {
                         if ($Items[$j].section -eq $sectionName -and
-                            $Items[$j].id -notlike "section-all-*") {
+                                $Items[$j].id -notlike "section-all-*") {
                             $selected[$j] = $toggleTo
                         }
                     }
@@ -175,8 +175,6 @@ function Install-Apps {
     $total = $AppsToInstall.Count
     if ($total -eq 0) { return }
 
-    Write-Host "-> [$($app.section)] $($app.name) ($percent%)" -ForegroundColor Cyan
-
     for ($i = 0; $i -lt $total; $i++) {
         $app = $AppsToInstall[$i]
         $percent = [int]((($i + 1) / $total) * 100)
@@ -185,7 +183,7 @@ function Install-Apps {
         Write-Progress -Activity 'Installing Applications' -Status "[$($i+1)/$total] $($app.name)" -PercentComplete $percent
 
         # header
-        Write-Host "-> $($app.name) ($percent%)" -ForegroundColor Cyan
+        Write-Host "-> [$($app.section)] $($app.name) ($percent%)" -ForegroundColor Cyan
 
         # show winget's native progress
         & winget install -e --id $app.id --accept-source-agreements --accept-package-agreements
