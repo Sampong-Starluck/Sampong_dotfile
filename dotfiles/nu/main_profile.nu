@@ -21,16 +21,24 @@ export def gmsg [--decorative(-d)] {
 }
 
 # Git commands with sensible defaults
-export def gcom [message: string] { git add . | git commit -m $message }
-export def gamend [] { git add . | git commit --amend --no-edit }
+export def gcom [message: string] {
+    git add .
+    git commit -m $message
+}
+
+export def gamend [] {
+    git add .
+    git commit --amend --no-edit
+}
+
 export def gstat [] { git status }
 
 # Smart git checkout with validation
 export def gcheck [branch?: string] {
-    if ($branch | is-empty) { 
-        error make --unspanned { msg: "Error: Branch name required" } 
-    } else { 
-        git checkout $branch 
+    if ($branch | is-empty) {
+        error make --unspanned { msg: "Error: Branch name required" }
+    } else {
+        git checkout $branch
     }
 }
 
@@ -44,7 +52,7 @@ export def lazygit [
 ] {
     # Add changes
     git add .
-    
+
     # Commit changes (amend or new)
     if $amend {
         git commit --amend --no-edit
@@ -54,10 +62,10 @@ export def lazygit [
         error make --unspanned { msg: "Error: Commit message required when not amending" }
         return
     }
-    
+
     # Pull changes (if not disabled)
     if (not $no_pull) { git pull origin $branch }
-    
+
     # Push changes (if not disabled)
     if (not $no_push) { git push }
 }
@@ -68,16 +76,15 @@ export def get-pubip [] {
 }
 
 # Load Oh My Posh theme with validation
-export def load_theme [theme: string = "catppuccin_frappe"] {
-    let theme_path = $"($env.POSH_THEMES_PATH)/($theme).omp.json"
-    
+export def load_theme [theme: string] {
+    let posh_path = $"($env.POSH_THEMES_PATH)"
+    let theme_path = $posh_path + $theme
     if (not ($theme_path | path exists)) {
-        error make --unspanned { msg: $"Theme not found: ($theme)" }
+        error make --unspanned { msg: $"Theme not found: ($theme_path)" }
         return
     }
-    
-    oh-my-posh init nu --config $theme_path | save --force ~/.oh-my-posh.nu
-    # source ~/.oh-my-posh.nu
+
+    oh-my-posh init nu --config $theme_path
 }
 
 # Startup configuration
@@ -89,10 +96,10 @@ export def startup [] {
         sync_on_enter: true
         isolation: true
     }
-    
+
     # Disable banner
     $env.config.show_banner = false
-    
+
     # Set editor with smart fallback
     $env.config.buffer_editor = if (which vim | length) > 0 { "vim" } else { "code" }
 }

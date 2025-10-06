@@ -10,10 +10,12 @@ import platform
 import shutil
 from datetime import datetime
 
+
 def ensure_dir(path: str) -> None:
     """Create directory if it does not exist."""
     if not os.path.exists(path):
         os.makedirs(path)
+
 
 def load_shells(online_mode=False):
     """Load shells.json from GitHub or local based on mode."""
@@ -26,6 +28,7 @@ def load_shells(online_mode=False):
             return fetch_json(SHELLS_JSON_LOCAL, SHELLS_JSON_LOCAL)
     return fetch_json(SHELLS_JSON_LOCAL, SHELLS_JSON_LOCAL)
 
+
 def backup_profile(path: str) -> str:
     """Create timestamped backup of profile file."""
     if os.path.exists(path):
@@ -35,6 +38,7 @@ def backup_profile(path: str) -> str:
         print(f"[BACKUP] {path} → {backup_path}")
         return backup_path
     return None
+
 
 def reset_profile(path: str, initial_content: str = "") -> None:
     """Backup existing profile and create new empty one."""
@@ -61,26 +65,31 @@ def configure_nushell():
     ensure_dir(nu_cfg)
     env_nu = os.path.join(nu_cfg, "env.nu")
     conf_nu = os.path.join(nu_cfg, "config.nu")
-    
+
     reset_profile(env_nu, "# NuShell environment config\n")
     reset_profile(conf_nu, "# NuShell main config\n")
 
     # 3) Apply Oh-My-Posh theme if found
     theme_paths = [
-        os.path.join(os.getenv("LOCALAPPDATA"), "Programs", "oh-my-posh", "themes", "spaceship.omp.json"),
-        os.path.join(os.getenv("PROGRAMFILES"), "oh-my-posh", "themes", "spaceship.omp.json"),
+        os.path.join(
+            os.getenv("LOCALAPPDATA"),
+            "Programs",
+            "oh-my-posh",
+            "themes",
+            "spaceship.omp.json",
+        ),
+        os.path.join(
+            os.getenv("PROGRAMFILES"), "oh-my-posh", "themes", "spaceship.omp.json"
+        ),
     ]
     theme = next((p for p in theme_paths if p and os.path.exists(p)), None)
-    entries = [
-        f"use {main_profile.replace('\\', '/')}",
-        "main_profile startup"
-    ]
+    entries = [f"use {main_profile.replace('\\', '/')}", 'load_theme "zash.omp.json"']
 
     with open(env_nu, "a", encoding="utf-8") as f:
         f.write("$env.config.show_banner = false\n")
         for entry in entries:
             f.write(f"{entry}\n")
-    
+
     print("[OK] Applied Oh-My-Posh to NuShell")
 
     # 4) Source custom profile
@@ -157,12 +166,12 @@ def configure_posh():
 def configure_shell(shell_id: str):
     """Configure shell based on shell_id from shells.json."""
     print(f"[*] Configuring shell: {shell_id}")
-    
+
     # Skip the "all" meta-entry
     if shell_id == "all":
         print("[SKIP] 'all' is a meta-entry, not a shell")
         return
-        
+
     # Map shell IDs to configuration functions
     shell_configs = {
         "powershell": configure_posh,
@@ -170,7 +179,7 @@ def configure_shell(shell_id: str):
         "bash": configure_bash,
         # "fish": configure_fish  # Uncomment when implementing fish shell
     }
-    
+
     # Get and call the appropriate configuration function
     config_func = shell_configs.get(shell_id.lower())
     if config_func:

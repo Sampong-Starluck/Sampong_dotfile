@@ -340,7 +340,7 @@ function Set-Posh {
 function Show-Menu {
     Clear-Host
     Write-Host '========================================' -ForegroundColor Cyan
-    Write-Host '      DEV ENVIRONMENT SETUP MENU      ' -ForegroundColor Cyan
+    Write-Host '      DEV ENVIRONMENT SETUP MENU        ' -ForegroundColor Cyan
     Write-Host '========================================' -ForegroundColor Cyan
     Write-Host '1) Install winget (if missing)'
     Write-Host '2) Install applications'
