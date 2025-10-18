@@ -54,9 +54,9 @@ def fetch_text(url, local_fallback=None):
     return None
 
 
-def fetch_json(url, local_path):
+def fetch_json(url, local_path, online_mode = False):
     """Fetch JSON from GitHub if --online, else fallback to local file."""
-    if ONLINE_MODE and not FORCE_LOCAL:
+    if online_mode and not FORCE_LOCAL:
         try:
             resp = requests.get(url, timeout=5)
             resp.raise_for_status()

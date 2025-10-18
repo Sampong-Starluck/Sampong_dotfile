@@ -21,7 +21,7 @@ def load_shells(online_mode=False):
     """Load shells.json from GitHub or local based on mode."""
     if online_mode:
         try:
-            return fetch_json(SHELLS_JSON_URL, SHELLS_JSON_LOCAL)
+            return fetch_json(SHELLS_JSON_URL, SHELLS_JSON_LOCAL, online_mode)
         except Exception as e:
             print(f"[WARN] Failed to fetch online config: {e}")
             print("[INFO] Falling back to local config")

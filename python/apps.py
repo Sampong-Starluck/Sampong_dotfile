@@ -1,8 +1,8 @@
 from python.config import APPS_JSON_URL, fetch_json, APPS_JSON_LOCAL
 
 
-def load_apps():
-    sections = fetch_json(APPS_JSON_URL, APPS_JSON_LOCAL)
+def load_apps(online_mode = False):
+    sections = fetch_json(APPS_JSON_URL, APPS_JSON_LOCAL, online_mode)
 
     if isinstance(sections, dict):
         print("[DEBUG] apps.json dict keys:", list(sections.keys()))
