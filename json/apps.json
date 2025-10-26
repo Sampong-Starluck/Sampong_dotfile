@@ -77,10 +77,6 @@
         "id": "Helix.Helix"
       },
       {
-        "name": "Helix",
-        "id": "Helix.Helix"
-      },
-      {
         "name": "Neovim",
         "id": "Neovim.Neovim"
       }
@@ -117,6 +113,10 @@
       {
         "name": "Version fox",
         "id": "version-fox.vfox"
+      },
+      {
+        "name": "Node Version Switcher (nvs)",
+        "id": "jasongin.nvs"
       }
     ]
   }
