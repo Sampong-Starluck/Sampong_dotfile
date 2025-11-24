@@ -142,9 +142,12 @@ The repository includes a **Python-based installer** with a GUI and CLI version.
 -   Installer downloads apps from the internet — **use it on trusted networks only.**
 
 ---
-## 👤 Maintainer
 
-Sampong-Starluck
+## Original source
+
+
+
+- [PowerShell](https://gist.github.com/timsneath/19867b12eee7fd5af2ba) by Tim Sneath
 
 --- 
 

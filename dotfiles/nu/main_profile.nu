@@ -42,6 +42,34 @@ export def gcheck [branch?: string] {
     }
 }
 
+export def gcbranch [
+    branch?: string,
+    --bugs(-b),
+    --feats(-f),
+    --hotfix(-h)
+] {
+    if ($branch != null) {
+        if ($hotfix or $feats or $bugs) {
+            # If any flag is passed, create branch with prefix
+            let branch_type = if $hotfix {
+                "hotfix"
+            } else if $feats {
+                "feats"
+            } else if $bugs {
+                "bugs"
+            }
+
+            git branch $"($branch_type)/($branch)"
+            git checkout $"($branch_type)/($branch)"
+        } else {
+            # No flag passed, just checkout the branch directly
+            git checkout $branch
+        }
+    } else {
+        git branch
+    }
+}
+
 # Combined lazy git workflows
 export def lazygit [
     message?: string,

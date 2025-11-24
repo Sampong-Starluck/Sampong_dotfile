@@ -171,44 +171,72 @@ function gamend {
 #         git push
 # }
 function lazygcom {
-  # Parse the command line arguments
-  param(
-    [Parameter(Mandatory = $true)]
-    [string] $Branch = "development",
-    [string] $Message = "daily update"
-  )
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("b")]
+        [string]$Branch,
 
-  # Extract options and values
-  $options = @{}
-  foreach ($arg in $args) {
-    if ($arg.StartsWith('--')) {
-      $optionName = $arg.Substring(2)
-      $options[$optionName] = $args | Where-Object { $_ -ne $arg } | Select-Object -First 1
-    } else {
-      $optionName = $arg.Substring(1)
-      $options[$optionName] = $args | Where-Object { $_ -ne $arg } | Select-Object -First 1
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("m")]
+        [string]$Message = "daily update"
+    )
+
+    try {
+        # Stage all changes
+        git add .
+
+        # Commit with message
+        git commit -m $Message
+
+        # Pull from origin
+        git pull
+
+        # If branch specified, pull from that specific branch
+        if ($Branch) {
+            git pull origin $Branch
+        }
+
+        # Push to origin
+        git push
     }
-  }
-
-  # Override default values with options
-  $Branch = if ($options["branch"]) { $options["branch"] } else { $Branch }
-  $Message = if ($options["message"]) { $options["message"] } else { $Message }
-
-  # Execute git commands
-  git add .
-  git commit -m $Message
-
-  if (-not $Branch) {
-    # --branch is not present, run git pull
-    git pull
-  } else {
-    # --branch is present, run git pull with the specified branch as well as current branch
-    git pull
-    git pull origin $Branch
-  }
-
-  git push
+    catch {
+        Write-Error "Git operation failed: $_"
+    }
 }
+
+function gcbranch {
+    param(
+        [string]$branch,
+        [switch][Alias("b")]$bugs,
+        [switch][Alias("f")]$feats,
+        [switch][Alias("h")]$hotfix
+    )
+
+    if ($null -ne $branch -and $branch -ne "") {
+        if ($hotfix -or $feats -or $bugs) {
+            # If any flag is passed, create branch with prefix
+            $branch_type = if ($hotfix) {
+                "hotfix"
+            } elseif ($feats) {
+                "feats"
+            } elseif ($bugs) {
+                "bugs"
+            }
+
+            git branch "$branch_type/$branch"
+            git checkout "$branch_type/$branch"
+        } else {
+            # No flag passed, just checkout the branch directly
+            git checkout $branch
+        }
+    } else {
+        git branch
+    }
+}
+
 function lazygamend {
         git add .
         git commit --amend --no-edit
