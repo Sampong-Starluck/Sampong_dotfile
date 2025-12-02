@@ -29,7 +29,7 @@ def load_shells(online_mode=False):
     return fetch_json(SHELLS_JSON_LOCAL, SHELLS_JSON_LOCAL)
 
 
-def backup_profile(path: str) -> str:
+def backup_profile(path: str) -> str | None:
     """Create timestamped backup of profile file."""
     if os.path.exists(path):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -83,7 +83,7 @@ def configure_nushell():
         ),
     ]
     # theme = next((p for p in theme_paths if p and os.path.exists(p)), None)
-    entries = [f"use {main_profile.replace('\\', '/')}", 'load_theme "zash.omp.json"']
+    entries = [f"use {main_profile.replace('\\', '/')}", 'load_theme "z ash.omp.json"']
 
     # with open(env_nu, "a", encoding="utf-8") as f:
     #     f.write("$env.config.show_banner = false\n")
@@ -98,7 +98,8 @@ def configure_nushell():
     with open(conf_nu, "a", encoding="utf-8") as f:
         f.write(f"\n{include} * \n")
         # f.write("main_profile startup\n")
-        f.write('load_theme "zash.omp.json"')
+        f.write('load_theme "zash.omp.json" \n')
+        f.write('$env.config.show_banner = false \n')
         print(f"[OK] Linked NuShell profile in {conf_nu}")
 
 
