@@ -14,9 +14,9 @@ export def gpull [branch?: string] {
 # Git msg with optional formatting
 export def gmsg [--decorative(-d)] {
     if $decorative {
-        git msg --graph --oneline --decorate
+        git log --graph --oneline --decorate
     } else {
-        git msg
+        git log
     }
 }
 
